@@ -1,0 +1,78 @@
+										Matthew Gruda
+										    1/31/2013
+										    
+					Maze Of Menace or 
+				  Rougelike Game Writeup
+				  
+Project Design:
+	
+		This program consists of three portions: the GUI, the
+	Dungeon object and the input control.  The GUI creates the
+	window and manages the display of the game.  The Dungeon 
+	object contains all the objects used for gameplay.  The Input 
+	control receives input from a KeyListener, and parses the 
+	input and takes the appropriate action.
+	
+Project History:
+
+		The first GUI was a third party GUI called Lanterna
+	was originally used for the display.  In the first month of coding,
+	the Dungeon object was partially implemented; basic level 
+	generation, movement, combat, and monster management were designed and 
+	partially implemented.  However there were several large and
+	serious bugs relating to combat.  Development was mainly inactive
+	for several months until the last week.  In the last week, the
+	bugs were fixed, the GUI was reimplemented, items were implemented,
+	and a storyline was created.
+	
+The GUI:
+	
+		The final GUI consists of the abstract GUI class, the XTerm classes
+	and the unused TtyTerm class.  The original GUI supported both Graphical
+	and Console display modes, but during reimplemetation the Console support
+	was dropped in favor of a more complex Graphical GUI, and the TtyTerm throws
+	a HeadlessException if it is initialized.  The XTerm class consists of several
+	private nested classes.  The implementation uses three Threads: a thread to
+	draw to the buffer, a thread to render the graphics, and a thread to 
+	listen for keyboard input.  The XTermRenderer class extends JFrame and creates the
+	actual window.  The GraphicsDraw class runs the buffer drawing thread and
+	draws the display to a buffer.  The RepaintControl thread sends a repaint request
+	to the XTermRenderer when GraphicsDraw notifies the thread.  The XTermRenderer
+	supports fullscreen mode, using the FullScreenChooser class to choose whether or
+	not to use fullscreen.  The inputListener class is added to the XTermRenderer
+	object to provide input.  The WindowEventHandler class is also added to the
+	XTermRenderer object to provide a custom close action; this is used to stop
+	all threads, call dispose on the XTermRender object and then call System.exit(0).
+	
+The Input and Drawing: 
+
+		A inputListener class is added to the XTermRender class to listen to the
+	keyboard input.  When keys are pressed, InputParse.inputParse is called. 
+	inputParse determines what to do based on Init.gamestate; possible states are
+	NORMAL, START, HELP, DEAD, INVENTORY, and OTHER. If, for example the game is
+	in NORMAL mode, NormalModeParse.inputParse() will be called on the input.  
+	The parse method will determine what to do according to input.  Then a draw method
+	is called.  If the game is in NORMAL, the Dungeon.draw() method is called;
+	this method calls Tile.draw() for each tile on currLvl, then Display.display()
+	is called to make the message list and status bar.  If the game is in INVENTORY, 
+	InventoryDisplay.draw() is called.  Otherwise Util.printStringWithLocNoCs is usually
+	called to print a String to the display, which might be obtained from a plain 
+	text file with Util.getTxtMsg().
+	
+The Dungeon: 
+		
+		The dungeon class has an ArrayList<Level> object holding all the levels
+	the player has visited. The Level class hold a two dimensional array of
+	Tile objects.  Each Tile object manages the drawing of that tile, and
+	the AbstractObjects on the tile.  AbstractObject is the root class of both
+	items and Entities, containing several abstract methods.  The Entity class
+	is the root of the Player and monster classes and contains movement and 
+	attacking methods for monsters and the player.  AbstractItem is the root
+	class for all items.  Player has an Inventory to  manage the items the
+	player grabs
+	
+The Turn: 
+
+		All active Entities on the level are added to the Turn.turnQue.  This
+	ArrayList is then sorted according to speed and the act() method is called
+	on each Entity

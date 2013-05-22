@@ -1,0 +1,31 @@
+    `gTECHNICAL:`
+     
+     The Maze Of Menace has several config files that
+     can be use to affect display settings located
+     in the `o./MazeOfMenace/config directory`. all
+     can be changed with a decent text editor like
+     vim or gedit. they are:
+     
+     `ofancytiles.cfg` - This sets the larger 24x24 graphical
+     tiles on. This will override tiles.cfg. Set to 0
+     for no tiles, or 1 for fancy tiles. `rDo not
+     use when changing the font.`
+     
+     `otiles.cfg` - This sets the basic 17x8 graphical tiles
+     on. fancytiles.cfg will override this. Set to 0
+     for no tiles or 1 for tiles. `rDo not use when changing
+     the font.`
+     `b*basic ascii rendering can be set with 
+     both of the above files on 0*`
+     
+     `ofont.cfg` - this sets the font name. see warnings above.
+     default is "Monospaced"
+     
+     `ofontsize.cfg` - This sets the size of the font. see 
+     warnings above. Default is 13
+     
+     `ofixedLvl.cfg` - This tells which levels are pregenerated.
+     Level numbers are seperated by semicolons ';' and ending with a "-1".
+     An entry here MUST be accompanied by a 
+     ./MazeOfMenace/dat/LVL<number>.lvl file in plain text format
+     (see accompanying .lvl files for examples).
