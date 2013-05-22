@@ -68,7 +68,7 @@ public abstract class Entity extends AbstractObject implements Serializable {
 	 * ensure there is no wall, ect in way.
 	 * 
 	 * @param direction
-	 *            direction to move in
+	 *            direction to move in 
 	 */
 	public void move(MoveDirection direction, AbstractObject obj) {
 		Location oldLoc = super.getLoc(), newLoc;
