@@ -93,6 +93,7 @@ public class GLDungeonDraw {
 			glPopMatrix();
 		}
 		glDisable(GL_FOG);
+		
 
 	}
 

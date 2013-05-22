@@ -1,11 +1,15 @@
 package terminal.gld;
 
 import java.awt.Button;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
-
+import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 import run.Init;
+import run.Util;
 import run.input.InputParse;
 
 public class GLDrawer {
@@ -30,6 +34,27 @@ public class GLDrawer {
 			break;
 
 		}
+	}
+	static TrueTypeFont fnt = new TrueTypeFont(new Font(Util.getTxtMsg("config/font.cfg")
+			.trim(), Font.PLAIN, Integer.parseInt(Util.getTxtMsg(
+			"config/fontsize.cfg").trim())), true);
+	public static void otherDraw(){
+		String s = "";
+		for(char[] c: ((GLDummyTerm)Init.terminal).term){
+			s += Arrays.toString(c) + '\n';
+		}
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		GL11.glOrtho(0, 680, 480, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		fnt.drawString(0, 0, s, 10, 10);
+		glPopMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	static int count = 0, p = 3;

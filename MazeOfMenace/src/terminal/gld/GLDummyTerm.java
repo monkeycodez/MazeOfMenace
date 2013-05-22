@@ -8,19 +8,21 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import terminal.Terminal;
 
 /**
  * @author 0200565
- *
+ * 
  */
 public class GLDummyTerm extends Terminal {
-	
-	private char[][] term = new char[80][80];
-	private int ptrx =0, ptry = 0;
 
-	/* (non-Javadoc)
+	public char[][] term = new char[80][80];
+
+	private int ptrx = 0, ptry = 0;
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see terminal.Terminal#enterPrivateMode()
 	 */
 	@Override
@@ -28,7 +30,9 @@ public class GLDummyTerm extends Terminal {
 		GLDisplay.startup();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see terminal.Terminal#exitPrivateMode()
 	 */
 	@Override
@@ -36,23 +40,25 @@ public class GLDummyTerm extends Terminal {
 		System.exit(0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see terminal.Terminal#putCharacter(char)
 	 */
-	
-	
-	
+
 	@Override
 	public void putCharacter(char c) {
 		term[ptrx][ptry] = c;
 		ptrx++;
-		if(ptrx == 80){
+		if (ptrx == 80) {
 			ptrx = 0;
 			ptry++;
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see terminal.Terminal#moveCursor(int, int)
 	 */
 	@Override
@@ -61,50 +67,19 @@ public class GLDummyTerm extends Terminal {
 		ptry = y;
 	}
 
-	/* (non-Javadoc)
-	 * @see terminal.Terminal#clearScreen()
-	 */
-	
-	BufferedWriter out;
-	
-	{
-		try {
-			out = new BufferedWriter(new FileWriter("logs"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-	}
-	
 	@Override
-	public void clearScreen()  {
-		for(int i = 0; i < 80; i++){
-			for(int c = 0; c < 80; c++){
-				try {
-					out.append(term[i][c]);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	public void clearScreen() {
+		for (int i = 0; i < 80; i++) {
+			for (int c = 0; c < 80; c++) {
+
 				term[c][i] = ' ';
 			}
-			try {
-				out.append('\n');
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
-		try {
-			out.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see terminal.Terminal#putCharacter(char, java.awt.Color)
 	 */
 	@Override

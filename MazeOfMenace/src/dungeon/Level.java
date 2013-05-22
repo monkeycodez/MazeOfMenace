@@ -71,7 +71,7 @@ public class Level implements Serializable {
 		preProccess(this);
 	}
 
-	public Tile[][] getlvl() {
+	public Tile getlvl() [][]{
 		return lvl;
 	}
 
