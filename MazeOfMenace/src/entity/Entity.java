@@ -59,6 +59,8 @@ public abstract class Entity extends AbstractObject implements Serializable {
 
 	public Entity() {
 	}
+	
+	public static void foo(){}
 
 	/**
 	 * the basic move method. it changes the Tile.objects array and the
