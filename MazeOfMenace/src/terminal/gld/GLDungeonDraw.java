@@ -62,7 +62,7 @@ public class GLDungeonDraw {
 				.1f, .1f, .1f, 1f
 		}));
 		glFogi(GL_FOG_MODE, GL_LINEAR);
-		glFogf(GL_FOG_START, 18f);
+		glFogf(GL_FOG_START, 10f);
 		glFogf(GL_FOG_END, 30f);
 
 		if ((currevent != null) && currevent.done()) {

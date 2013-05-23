@@ -17,6 +17,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.*;
 
 public class GLDisplay {
+	
+	public static final int fps = 50;
 
 	private static Thread mloop;
 	
@@ -67,7 +69,7 @@ public class GLDisplay {
 				Display.update();
 		//		System.out.println("  "+(System.currentTimeMillis() - t)/ 100.0);
 
-				Display.sync(30);
+				Display.sync(50);
 		//		System.out.println((System.currentTimeMillis() - t)/ 100.0);
 				if(Keyboard.isKeyDown(Keyboard.KEY_END)) System.exit(9999);
 			}

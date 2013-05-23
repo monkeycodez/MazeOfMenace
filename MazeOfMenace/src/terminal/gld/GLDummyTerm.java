@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import run.Init;
 import terminal.Terminal;
 
 /**
@@ -17,8 +18,9 @@ import terminal.Terminal;
 public class GLDummyTerm extends Terminal {
 
 	public char[][] term = new char[80][80];
-
+	private static Color[][] colarr = new Color[80][80];
 	private int ptrx = 0, ptry = 0;
+	private static boolean changed = true;
 
 	/*
 	 * (non-Javadoc)
@@ -27,6 +29,7 @@ public class GLDummyTerm extends Terminal {
 	 */
 	@Override
 	public void enterPrivateMode() {
+		this.clearScreen();
 		GLDisplay.startup();
 	}
 
@@ -71,10 +74,11 @@ public class GLDummyTerm extends Terminal {
 	public void clearScreen() {
 		for (int i = 0; i < 80; i++) {
 			for (int c = 0; c < 80; c++) {
-
+				colarr[c][i] = Color.white;
 				term[c][i] = ' ';
 			}
 		}
+		changed = true;
 	}
 
 	/*
@@ -84,7 +88,30 @@ public class GLDummyTerm extends Terminal {
 	 */
 	@Override
 	public void putCharacter(char c, Color col) {
+		colarr[ptrx][ptry] = col;
 		putCharacter(c);
+	}
+	
+	public static Color[] toColArr(){
+		Color[] tmp = new Color[81*80];
+		int ptr = 0;
+		for(int i = 0; i < 80; i++){
+			for(int c = 0; c<80; c++){
+				tmp[ptr] = colarr[c][i];
+				ptr++;
+			}
+			tmp[ptr] = Color.WHITE;
+			ptr++;
+		}
+		return tmp;
+	}
+	
+	public static boolean changed(){
+		return changed;
+	}
+	
+	public static void donechanged(){
+		changed = false;
 	}
 
 }
