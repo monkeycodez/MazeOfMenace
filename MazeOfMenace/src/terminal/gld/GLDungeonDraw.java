@@ -11,6 +11,7 @@ import run.Util;
 import terminal.gld.event.GLDEvent;
 import terminal.gld.event.GLDEventQue;
 import dungeon.tile.Floor;
+import dungeon.tile.Fountan;
 import dungeon.tile.StairDown;
 import dungeon.tile.StairUp;
 import dungeon.tile.Tile;
@@ -101,101 +102,104 @@ public class GLDungeonDraw {
 			glPopMatrix();
 		}
 		glDisable(GL_FOG);
-		
 
 	}
-	
-	private static Color[] mkcolarr(String s){
+
+	private static Color[] mkcolarr(String s) {
 		List<Color> colarr = new ArrayList<Color>();
 		Color last = Color.white;
 		boolean in = false, no = false;
-		for(int i = 0; i < s.length(); i++){
-			
+		for (int i = 0; i < s.length(); i++) {
+
 			char c = s.charAt(i);
-			
-			if(no){
+
+			if (no) {
 				last = Util.getColor(c);
 				no = false;
 				continue;
 			}
-			
-			if(in && c == '`'){
+
+			if (in && c == '`') {
 				last = Color.white;
 				in = !in;
 				continue;
 			}
-			
-			if(c == '`'){
+
+			if (c == '`') {
 				no = true;
 				in = true;
 				continue;
 			}
 			colarr.add(last);
-			
+
 		}
-		return colarr.toArray(new Color[]{});
+		return colarr.toArray(new Color[] {});
 	}
-	
-	private static String cleanstr(String s){
+
+	private static String cleanstr(String s) {
 		StringBuilder str = new StringBuilder();
-		
+
 		boolean in = false, no = false;
-		for(int i = 0; i < s.length(); i++){
+		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-			if(no){
+			if (no) {
 				no = false;
 				continue;
 			}
-			
-			if(in && c == '`'){
+
+			if (in && c == '`') {
 				in = !in;
 				continue;
 			}
-			
-			if(c == '`'){
+
+			if (c == '`') {
 				no = true;
 				in = true;
 				continue;
 			}
 			str.append(c);
 		}
-		
+
 		return str.toString();
 	}
-	
-	private static void drawHUD(){
+
+	private static void drawHUD() {
 		glDisable(GL_FOG);
 		String s = "";
-		s = entity.player.Display.getDispLine();			
+		s = entity.player.Display.getDispLine();
 		int e = glGetError();
-		if(e != GL11.GL_NO_ERROR)
-			System.out.println(e +" h " + org.lwjgl.opengl.Util.translateGLErrorString(e));
+		if (e != GL11.GL_NO_ERROR)
+			System.out.println(e
+					+ " h "
+					+ org.lwjgl.opengl.Util
+							.translateGLErrorString(e));
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
 		GL11.glOrtho(0, 800, 0, 600, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
-		
+
 		glPushMatrix();
 		glLoadIdentity();
 
 		glClear(GL_DEPTH_BUFFER_BIT);
-		//glColor3f(1, 0, 0);
+		// glColor3f(1, 0, 0);
 		String str = cleanstr(s);
-		GLDrawer.fnt.drawString(10, 130, str, 0, str.length()-1, .35f, .35f, TrueTypeFont.ALIGN_LEFT, mkcolarr(s));
-		
+		GLDrawer.fnt.drawString(10, 130, str, 0, str.length() - 1,
+				.35f, .35f, TrueTypeFont.ALIGN_LEFT,
+				mkcolarr(s));
 
 		glPopMatrix();
-		
+
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
-//		glLoadIdentity();
-		//GLU.gluPerspective(80, 1366 / 786, 1f, 500f);
-		glMatrixMode(GL_MODELVIEW);		
+		// glLoadIdentity();
+		// GLU.gluPerspective(80, 1366 / 786, 1f, 500f);
+		glMatrixMode(GL_MODELVIEW);
 
 	}
-	
-	public static void drawItems(){
+
+	public static void drawItems() {
 		Tile[][] tarr = Init.getDungeon().getCurrentLevelObj().getlvl();
 		for (Tile[] ta : tarr) {
 			for (Tile t : ta) {
@@ -205,8 +209,8 @@ public class GLDungeonDraw {
 			}
 		}
 	}
-	
-	private static void drawI(Tile t){
+
+	private static void drawI(Tile t) {
 		glBindTexture(GL_TEXTURE_2D, t.getObject().getTexId());
 		glPushMatrix();
 		glTranslatef(t.getX(), 0, t.getY());
@@ -214,13 +218,13 @@ public class GLDungeonDraw {
 		glBegin(GL_QUADS);
 		{
 			glTexCoord2f(0, 0);
-			glVertex3f(.5f , -.8f, .5f );
+			glVertex3f(.5f, -.8f, .5f);
 			glTexCoord2f(1, 0);
-			glVertex3f(-.5f, -.8f, .5f );
+			glVertex3f(-.5f, -.8f, .5f);
 			glTexCoord2f(1, 1);
 			glVertex3f(-.5f, -.8f, -.5f);
 			glTexCoord2f(0, 1);
-			glVertex3f(.5f , -.8f, -.5f);
+			glVertex3f(.5f, -.8f, -.5f);
 		}
 		glEnd();
 		glPopMatrix();
@@ -253,6 +257,12 @@ public class GLDungeonDraw {
 								tl.getY(),
 								TextureDB.getTexture(
 										"./dat/tiles/fancy/static/stairup.png")
+										.getTextureID());
+					} else if (tl.getBasetile() instanceof Fountan) {
+						drawfloor(tl.getX(),
+								tl.getY(),
+								TextureDB.getTexture(
+										"./dat/tiles/fancy/static/fountain.png")
 										.getTextureID());
 					} else if (tl.getBasetile() instanceof Floor) {
 						drawfloor(tl.getX(), tl.getY());

@@ -52,6 +52,7 @@ public final class GeneratePlayer {
 						.setPlayer(new Player(x, y, 0));
 			}
 		}
+		assert Init.getDungeon().getPlayer() != null : "could not place player";
 	}
 
 }

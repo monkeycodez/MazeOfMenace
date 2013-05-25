@@ -54,7 +54,7 @@ public final class Display {
 	}
 	
 	public static String getDispLine(){
-		return getCharInfoLine();
+		return getCharInfoLine() + displayString;
 	}
 
 	private static char getHpChar() {

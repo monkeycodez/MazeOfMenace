@@ -327,22 +327,22 @@ public final class GenerateLevel {
 		for (int i = 0; i < 2000; i++) {
 			switch (r.nextInt(4)) {
 			case 0: // north
-				if (lvl.getlvl()[x - 1][y].getBasetile() instanceof Floor) {
+				if (bc(x, y) && lvl.getlvl()[x - 1][y].getBasetile() instanceof Floor) {
 					return CorridorPlace.NORTH;
 				}
 				break;
 			case 1:
-				if (lvl.getlvl()[x + 1][y].getBasetile() instanceof Floor) {
+				if (bc(x, y) && lvl.getlvl()[x + 1][y].getBasetile() instanceof Floor) {
 					return CorridorPlace.SOUTH;
 				}
 				break;
 			case 2:
-				if (lvl.getlvl()[x][y - 1].getBasetile() instanceof Floor) {
+				if (bc(x, y) && lvl.getlvl()[x][y - 1].getBasetile() instanceof Floor) {
 					return CorridorPlace.WEST;
 				}
 				break;
 			case 3:
-				if (lvl.getlvl()[x][y + 1].getBasetile() instanceof Floor) {
+				if (bc(x, y) && lvl.getlvl()[x][y + 1].getBasetile() instanceof Floor) {
 					return CorridorPlace.EAST;
 				}
 			}

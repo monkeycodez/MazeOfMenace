@@ -101,21 +101,24 @@ public final class NormalModeParse {
 				.getBasetile() instanceof Fountan) {
 			if (Init.getDungeon().getPlayer().getHp() + 10 >= Init
 					.getDungeon().getPlayer().getHpmax()) {
+				Turn.turn();
 				Init.getDungeon()
 						.getPlayer()
 						.setHp(Init.getDungeon()
 								.getPlayer()
 								.getHpmax());
+				Display.addMsg("`bYou are not very thirsty`");
 			} else {
+				Turn.turn();
 				Init.getDungeon()
 						.getPlayer()
 						.setHp(Init.getDungeon()
 								.getPlayer()
 								.getHp() + 10);
+				Display.addMsg("`bYou drink some water!`");
 			}
-			Display.addMsg("`bYou drink some water!`");
 		}
-		Turn.turn();
+		
 	}
 
 	private static void grab() {
@@ -127,8 +130,12 @@ public final class NormalModeParse {
 			o.pickUp();
 			if (o instanceof AbstractWeapon) {
 				p.getIndv().add((AbstractWeapon) o);
+				Display.addMsg("You grabed the `r"
+						+ o.getName());
 			} else if (o instanceof AbstractArmor) {
 				p.getIndv().add((AbstractArmor) o);
+				Display.addMsg("You grabed the `g"
+						+ o.getName());
 			} else if (o instanceof AbstractConsumeable) {
 				p.getIndv().add((AbstractConsumeable) o);
 			} else if (o instanceof OrbOfYendor) {
@@ -179,7 +186,6 @@ public final class NormalModeParse {
 	 * moves player up/down one level
 	 */
 	private static void switchLvl() {
-		System.out.println("going");
 		GLDungeonDraw.updatedgn();
 		Player p = Init.getDungeon().getPlayer();
 		Level lvl = Init.getDungeon().getCurrentLevelObj();

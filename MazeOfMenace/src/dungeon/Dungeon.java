@@ -101,13 +101,11 @@ public class Dungeon implements Serializable {
 	 * moves down one level. currentLvl changed and new level added if needed
 	 */
 	public void levelUp() {
-		System.out.println("Lvl up");
 		currentLvl++;
 		if (currentLvl > maxLvl) {
 			maxLvl++;
 			makeNewLevel();
 		}
-		System.out.println("Current lvl:"+currentLvl);
 		player.setZ(currentLvl);
 	}
 
