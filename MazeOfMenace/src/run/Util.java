@@ -207,6 +207,7 @@ public class Util {
 	 * @return the String containing the contents
 	 */
 	public static String getTxtMsg(String file) {
+		System.out.println("getting msg");
 		String s = "";
 		try {
 			FileReader r = new FileReader(new File(file));

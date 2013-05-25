@@ -90,6 +90,7 @@ public class Init {
 		String s = Util.getTxtMsg(optlocgl);
 		s = s.trim();
 		if(Integer.parseInt(s) == 1) usegl = true;
+		gloi = true;
 		return usegl;
 	}
 
