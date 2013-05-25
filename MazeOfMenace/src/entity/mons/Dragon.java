@@ -31,9 +31,11 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import engine.image.TextureDB;
 import entity.Entity;
 import entity.player.Display;
 
+import run.Init;
 import run.Util;
 import run.turn.Turn;
 import terminal.ImageVars;
@@ -144,5 +146,8 @@ public class Dragon extends GeneralMonster {
 		// TODO Auto-generated method stub
 		return ImageVars.dragf;
 	}
-
+	public int getTexId(){
+		if(Init.useGL()) return TextureDB.getTexture("./dat/tiles/fancy/entity/dragon.png").getTextureID();
+		return 0;
+	}
 }

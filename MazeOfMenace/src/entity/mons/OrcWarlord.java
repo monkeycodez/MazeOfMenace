@@ -27,7 +27,9 @@ package entity.mons;
 
 import java.awt.Color;
 import java.awt.Image;
+import engine.image.TextureDB;
 
+import run.Init;
 import run.turn.Turn;
 import terminal.ImageVars;
 
@@ -121,6 +123,11 @@ public class OrcWarlord extends GeneralMonster {
 	public Image getfIm() {
 		// TODO Auto-generated method stub
 		return ImageVars.orcwf;
+	}
+	
+	public int getTexId(){
+		if(Init.useGL()) return TextureDB.getTexture("./dat/tiles/fancy/entity/orcwarlord.png").getTextureID();
+		return 0;
 	}
 
 }

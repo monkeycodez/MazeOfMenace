@@ -86,15 +86,45 @@ public class GLDungeonDraw {
 		} else {
 			glPushMatrix();
 			currevent.applyPLocStart();
-
 			drawdgn();
 			drawEntity();
+			drawItems();
 			currevent.applyPLocEnd();
 			glPopMatrix();
 		}
 		glDisable(GL_FOG);
 		
 
+	}
+	
+	public static void drawItems(){
+		Tile[][] tarr = Init.getDungeon().getCurrentLevelObj().getlvl();
+		for (Tile[] ta : tarr) {
+			for (Tile t : ta) {
+				if (t.getObject() != null) {
+					drawI(t);
+				}
+			}
+		}
+	}
+	
+	private static void drawI(Tile t){
+		glBindTexture(GL_TEXTURE_2D, t.getObject().getTexId());
+		glPushMatrix();
+		glTranslatef(t.getX(), 0, t.getY());
+		glScalef(.5f, .5f, .5f);
+		glBegin(GL_QUADS);
+		{
+			glTexCoord2f(0, 0);
+			glVertex3f(.5f , -.5f, .5f );
+			glTexCoord2f(1, 0);
+			glVertex3f(-.5f, -.5f, .5f );
+			glTexCoord2f(1, 1);
+			glVertex3f(-.5f, -.5f, -.5f);
+			glTexCoord2f(0, 1);
+			glVertex3f(.5f , -.5f, -.5f);
+		}
+		glEnd();
 	}
 
 	public static void drawdgn() {
@@ -147,40 +177,40 @@ public class GLDungeonDraw {
 		glScalef(.5f, .5f, .5f);
 		glBegin(GL_QUADS);
 		{
-			glTexCoord2f(0, 0);
-			glVertex3f(.5f, .5f, .5f);
 			glTexCoord2f(1, 0);
-			glVertex3f(.5f, -.5f, .5f);
+			glVertex3f(.5f, .5f, .5f);
 			glTexCoord2f(1, 1);
-			glVertex3f(-.5f, -.5f, .5f);
+			glVertex3f(.5f, -.5f, .5f);
 			glTexCoord2f(0, 1);
+			glVertex3f(-.5f, -.5f, .5f);
+			glTexCoord2f(0, 0);
 			glVertex3f(-.5f, .5f, .5f);
 			// back
-			glTexCoord2f(0, 0);
-			glVertex3f(.5f, .5f, -.5f);
 			glTexCoord2f(1, 0);
+			glVertex3f(.5f, .5f, -.5f);
+			glTexCoord2f(1, 01);
 			glVertex3f(.5f, -.5f, -.5f);
-			glTexCoord2f(1, 1);
-			glVertex3f(-.5f, -.5f, -.5f);
 			glTexCoord2f(0, 1);
+			glVertex3f(-.5f, -.5f, -.5f);
+			glTexCoord2f(0, 0);
 			glVertex3f(-.5f, .5f, -.5f);
 			// left
-			glTexCoord2f(0, 0);
-			glVertex3f(-.5f, .5f, .5f);
 			glTexCoord2f(1, 0);
-			glVertex3f(-.5f, -.5f, .5f);
+			glVertex3f(-.5f, .5f, .5f);
 			glTexCoord2f(1, 1);
-			glVertex3f(-.5f, -.5f, -.5f);
+			glVertex3f(-.5f, -.5f, .5f);
 			glTexCoord2f(0, 1);
+			glVertex3f(-.5f, -.5f, -.5f);
+			glTexCoord2f(0, 0);
 			glVertex3f(-.5f, .5f, -.5f);
 			// right
-			glTexCoord2f(0, 0);
-			glVertex3f(.5f, .5f, .5f);
 			glTexCoord2f(1, 0);
-			glVertex3f(.5f, -.5f, .5f);
+			glVertex3f(.5f, .5f, .5f);
 			glTexCoord2f(1, 1);
-			glVertex3f(.5f, -.5f, -.5f);
+			glVertex3f(.5f, -.5f, .5f);
 			glTexCoord2f(0, 1);
+			glVertex3f(.5f, -.5f, -.5f);
+			glTexCoord2f(0, 0);
 			glVertex3f(.5f, .5f, -.5f);
 		}
 		glEnd();

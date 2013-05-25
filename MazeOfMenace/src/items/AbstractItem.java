@@ -27,6 +27,7 @@ import java.awt.Image;
 import run.Init;
 import dungeon.tile.AbstractObject;
 import dungeon.tile.Location;
+import engine.image.TextureDB;
 
 public abstract class AbstractItem extends AbstractObject {
 
@@ -65,6 +66,12 @@ public abstract class AbstractItem extends AbstractObject {
 	public void pickUp(){
 		onFloor = false;
 		Init.getDungeon().getLevel(getZ()).getlvl()[getX()][getY()].removeObject(null);
+	}
+	
+	public int getTexId(){
+		return TextureDB.getTexture(
+				"./dat/tiles/fancy/entity/armor.png")
+				.getTextureID();
 	}
 	
 }

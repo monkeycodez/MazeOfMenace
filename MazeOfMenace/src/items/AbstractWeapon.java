@@ -30,6 +30,7 @@ import java.awt.Image;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import engine.image.TextureDB;
 
 import terminal.ImageVars;
 
@@ -91,6 +92,12 @@ public abstract class AbstractWeapon extends AbstractItem {
 
 	public Color getColor() {
 		return Color.red.brighter().brighter();
+	}
+	
+	public int getTexId(){
+		return TextureDB.getTexture(
+				"./dat/tiles/fancy/entity/sword.png")
+				.getTextureID();
 	}
 
 }

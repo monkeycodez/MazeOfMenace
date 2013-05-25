@@ -30,7 +30,9 @@ import java.awt.Image;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import engine.image.TextureDB;
 
+import run.Init;
 import run.turn.Turn;
 import terminal.ImageVars;
 
@@ -129,5 +131,8 @@ public class Orc extends GeneralMonster {
 		// TODO Auto-generated method stub
 		return ImageVars.orcf;
 	}
-
+	public int getTexId(){
+		if(Init.useGL()) return TextureDB.getTexture("./dat/tiles/fancy/entity/orc.png").getTextureID();
+		return 0;
+	}
 }

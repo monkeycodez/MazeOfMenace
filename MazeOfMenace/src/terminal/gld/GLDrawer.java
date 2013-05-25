@@ -48,9 +48,7 @@ public class GLDrawer {
 			}
 			s += '\n';
 		}
-		
-		System.out.println(GLDummyTerm.changed());
-		
+				
 		// System.out.println(s);
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();

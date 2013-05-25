@@ -398,17 +398,12 @@ public class TrueTypeFont {
 				} else {
 					if (usecol) {
 						Color col = colarr[i];
-						System.out.print(col);
 						GL11.glColor4f( col
 								.getRed() / 255f,
 								 col.getGreen() / 255f,
 								 col.getBlue() / 255f,
 								col.getAlpha() / 255f);
-						System.out.printf("%f %f %f %f \n", col
-								.getRed() / 255f,
-								 col.getGreen() / 255f,
-								 col.getBlue() / 255f,
-								col.getAlpha() / 255f);
+						
 					}
 					drawQuad((totalwidth + intObject.width)
 							* scaleX + x,
