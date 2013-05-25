@@ -65,7 +65,6 @@ public class Dungeon implements Serializable {
 		makeNewLevel();
 		currentLvl = 0;
 		GeneratePlayer.generatePlayer(everything.get(0));
-
 	}
 
 	/**
@@ -85,7 +84,7 @@ public class Dungeon implements Serializable {
 	 */
 	public void draw() {
 		FancyImageBuffer.clearPics();
-		player.makeLOS();
+		this.player.makeLOS();
 		everything.get(currentLvl).draw();
 		everything.get(currentLvl).drawf();
 		Display.display();

@@ -110,11 +110,11 @@ public class XTerm extends Terminal {
 		backbuffer = new BufferedImage(h, w, BufferedImage.TYPE_INT_RGB);
 		g2d = backbuffer.createGraphics();
 		winFrame.addKeyListener(new inputListener());
-		this.clearScreen();
+//		this.clearScreen();
 		gl = new Thread(new GraphicsDraw(this), "Drawing Thread");
 		gl.start();
 		started = true;
-		this.clearScreen();
+//		this.clearScreen();
 		render = new Thread(new RepaintControl(), "Render Thread");
 		render.start();
 	}

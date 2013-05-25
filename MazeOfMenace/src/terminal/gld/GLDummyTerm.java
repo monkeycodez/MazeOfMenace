@@ -29,7 +29,6 @@ public class GLDummyTerm extends Terminal {
 	 */
 	@Override
 	public void enterPrivateMode() {
-		this.clearScreen();
 		GLDisplay.startup();
 	}
 

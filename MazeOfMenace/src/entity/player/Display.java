@@ -43,7 +43,6 @@ public final class Display {
 		//Util.logDisplayMsg(displayString);
 		Util.printStringWithLocNoCs(getCharInfoLine() + displayString,
 				Init.terminal, 1, 33, 1);
-		displayString = "";
 	}
 
 	private static String getCharInfoLine() {
@@ -52,6 +51,10 @@ public final class Display {
 				+ "  Lvl: " + p.getLevel() + "  Hp: `" + getHpChar()
 				+ p.getHp() + "/" + p.getHpmax() + "`  speed: " + p.getSpeed()
 				+ "\n";
+	}
+	
+	public static String getDispLine(){
+		return getCharInfoLine();
 	}
 
 	private static char getHpChar() {

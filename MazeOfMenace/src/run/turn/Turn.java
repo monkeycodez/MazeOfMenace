@@ -87,6 +87,7 @@ public final class Turn {
 	 * according so speed, and then their act() methods are called
 	 */
 	public static void turn() {
+		Display.flush();
 		Init.getDungeon().getPlayer().regenControl();
 		Init.getDungeon().getPlayer().checkDeath(Init.getDungeon().getPlayer());
 		monsMove();

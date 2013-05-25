@@ -261,7 +261,8 @@ public final class GenerateLevel {
 			switch (c) {
 			case EAST:
 				for (int z = 0; z < steps; z++) {
-					if (bc(xLoc, yLoc) &&lvl.getlvl()[xLoc + 1][yLoc].getBasetile() instanceof Floor) {
+					if (bc(xLoc, yLoc) &&lvl.getlvl()[xLoc + 1][yLoc].getBasetile() instanceof Floor &&
+							!(lvl.getlvl()[xLoc - 1][yLoc].getBasetile() instanceof StairUp)) {
 						xLoc++;
 					} else {
 						break;
@@ -272,7 +273,8 @@ public final class GenerateLevel {
 				break outer;
 			case NORTH:
 				for (int z = 0; z < steps; z++) {
-					if (bc(xLoc, yLoc) &&lvl.getlvl()[xLoc][yLoc - 1].getBasetile() instanceof Floor) {
+					if (bc(xLoc, yLoc) &&lvl.getlvl()[xLoc][yLoc - 1].getBasetile() instanceof Floor &&
+							!(lvl.getlvl()[xLoc - 1][yLoc].getBasetile() instanceof StairUp)) {
 						yLoc--;
 					} else {
 						break;
@@ -281,7 +283,8 @@ public final class GenerateLevel {
 				break;
 			case SOUTH:
 				for (int z = 0; z < steps; z++) {
-					if (bc(xLoc, yLoc) && lvl.getlvl()[xLoc][yLoc + 1].getBasetile() instanceof Floor) {
+					if (bc(xLoc, yLoc) && lvl.getlvl()[xLoc][yLoc + 1].getBasetile() instanceof Floor &&
+							!(lvl.getlvl()[xLoc - 1][yLoc].getBasetile() instanceof StairUp)) {
 						yLoc++;
 					} else {
 						break;
@@ -290,7 +293,8 @@ public final class GenerateLevel {
 				break;
 			case WEST:
 				for (int z = 0; z < steps; z++) {
-					if (bc(xLoc, yLoc) && lvl.getlvl()[xLoc - 1][yLoc].getBasetile() instanceof Floor) {
+					if (bc(xLoc, yLoc) && lvl.getlvl()[xLoc - 1][yLoc].getBasetile() instanceof Floor &&
+							!(lvl.getlvl()[xLoc - 1][yLoc].getBasetile() instanceof StairUp)) {
 						xLoc--;
 					} else {
 						break;
@@ -301,6 +305,10 @@ public final class GenerateLevel {
 				break;
 
 			}
+		}
+		if(lvl.getlvl()[xLoc][yLoc].getBasetile() instanceof StairUp){
+			mkDwnStr(lvl);
+			return;
 		}
 		int x = xLoc, y = yLoc;
 		lvl.getlvl()[x][y].setBaseTile(new StairDown());

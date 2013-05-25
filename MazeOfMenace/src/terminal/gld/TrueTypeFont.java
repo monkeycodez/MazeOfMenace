@@ -251,14 +251,14 @@ public class TrueTypeFont {
 		float RenderHeight = (SrcHeight / textureHeight);
 
 		GL11.glTexCoord2f(TextureSrcX, TextureSrcY);
-		GL11.glVertex2f(drawX, drawY);
+		GL11.glVertex3f(drawX, drawY, .1f);
 		GL11.glTexCoord2f(TextureSrcX, TextureSrcY + RenderHeight);
-		GL11.glVertex2f(drawX, drawY + DrawHeight);
+		GL11.glVertex3f(drawX, drawY + DrawHeight, .1f);
 		GL11.glTexCoord2f(TextureSrcX + RenderWidth, TextureSrcY
 				+ RenderHeight);
-		GL11.glVertex2f(drawX + DrawWidth, drawY + DrawHeight);
+		GL11.glVertex3f(drawX + DrawWidth, drawY + DrawHeight, .1f);
 		GL11.glTexCoord2f(TextureSrcX + RenderWidth, TextureSrcY);
-		GL11.glVertex2f(drawX + DrawWidth, drawY);
+		GL11.glVertex3f(drawX + DrawWidth, drawY, .1f);
 	}
 
 	public int getWidth(String whatchars) {

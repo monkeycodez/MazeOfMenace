@@ -48,13 +48,12 @@ public class Init {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-	//	dgn = new Dungeon();
-	//	dgn.setUpDungeon();
-		//start up window
-		terminal.enterPrivateMode();
-		//start game
+		terminal.clearScreen();
 		state = GameState.START;
 		Startup.printStartupMsg();
+		terminal.enterPrivateMode();
+		//start game
+		
 	}
 	/**
 	 * gets the dungeon

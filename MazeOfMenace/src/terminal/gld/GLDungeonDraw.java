@@ -1,7 +1,13 @@
 package terminal.gld;
 
 import static org.lwjgl.opengl.GL11.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import run.Init;
+import run.Util;
 import terminal.gld.event.GLDEvent;
 import terminal.gld.event.GLDEventQue;
 import dungeon.tile.Floor;
@@ -56,7 +62,6 @@ public class GLDungeonDraw {
 	}
 
 	public static void draw() {
-
 		glEnable(GL_FOG);
 		glFog(GL_FOG_COLOR, GLUtils.toBuf(new float[] {
 				.1f, .1f, .1f, 1f
@@ -82,6 +87,8 @@ public class GLDungeonDraw {
 			glTranslatef(-x, yz, -y);
 			drawdgn();
 			drawEntity();
+			drawItems();
+			drawHUD();
 			glPopMatrix();
 		} else {
 			glPushMatrix();
@@ -89,11 +96,102 @@ public class GLDungeonDraw {
 			drawdgn();
 			drawEntity();
 			drawItems();
+			drawHUD();
 			currevent.applyPLocEnd();
 			glPopMatrix();
 		}
 		glDisable(GL_FOG);
 		
+
+	}
+	
+	private static Color[] mkcolarr(String s){
+		List<Color> colarr = new ArrayList<Color>();
+		Color last = Color.white;
+		boolean in = false, no = false;
+		for(int i = 0; i < s.length(); i++){
+			
+			char c = s.charAt(i);
+			
+			if(no){
+				last = Util.getColor(c);
+				no = false;
+				continue;
+			}
+			
+			if(in && c == '`'){
+				last = Color.white;
+				in = !in;
+				continue;
+			}
+			
+			if(c == '`'){
+				no = true;
+				in = true;
+				continue;
+			}
+			colarr.add(last);
+			
+		}
+		return colarr.toArray(new Color[]{});
+	}
+	
+	private static String cleanstr(String s){
+		StringBuilder str = new StringBuilder();
+		
+		boolean in = false, no = false;
+		for(int i = 0; i < s.length(); i++){
+			char c = s.charAt(i);
+			if(no){
+				no = false;
+				continue;
+			}
+			
+			if(in && c == '`'){
+				in = !in;
+				continue;
+			}
+			
+			if(c == '`'){
+				no = true;
+				in = true;
+				continue;
+			}
+			str.append(c);
+		}
+		
+		return str.toString();
+	}
+	
+	private static void drawHUD(){
+		glDisable(GL_FOG);
+		String s = "";
+		s = entity.player.Display.getDispLine();			
+		int e = glGetError();
+		if(e != GL11.GL_NO_ERROR)
+			System.out.println(e +" h " + org.lwjgl.opengl.Util.translateGLErrorString(e));
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		GL11.glOrtho(0, 800, 0, 600, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		
+		glPushMatrix();
+		glLoadIdentity();
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+		//glColor3f(1, 0, 0);
+		String str = cleanstr(s);
+		GLDrawer.fnt.drawString(10, 130, str, 0, str.length()-1, .35f, .35f, TrueTypeFont.ALIGN_LEFT, mkcolarr(s));
+		
+
+		glPopMatrix();
+		
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+//		glLoadIdentity();
+		//GLU.gluPerspective(80, 1366 / 786, 1f, 500f);
+		glMatrixMode(GL_MODELVIEW);		
 
 	}
 	
@@ -116,15 +214,16 @@ public class GLDungeonDraw {
 		glBegin(GL_QUADS);
 		{
 			glTexCoord2f(0, 0);
-			glVertex3f(.5f , -.5f, .5f );
+			glVertex3f(.5f , -.8f, .5f );
 			glTexCoord2f(1, 0);
-			glVertex3f(-.5f, -.5f, .5f );
+			glVertex3f(-.5f, -.8f, .5f );
 			glTexCoord2f(1, 1);
-			glVertex3f(-.5f, -.5f, -.5f);
+			glVertex3f(-.5f, -.8f, -.5f);
 			glTexCoord2f(0, 1);
-			glVertex3f(.5f , -.5f, -.5f);
+			glVertex3f(.5f , -.8f, -.5f);
 		}
 		glEnd();
+		glPopMatrix();
 	}
 
 	public static void drawdgn() {

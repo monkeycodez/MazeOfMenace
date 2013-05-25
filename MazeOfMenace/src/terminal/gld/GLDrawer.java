@@ -48,8 +48,6 @@ public class GLDrawer {
 			}
 			s += '\n';
 		}
-				
-		// System.out.println(s);
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
@@ -269,6 +267,10 @@ public class GLDrawer {
 		}else if (Keyboard.isKeyDown(Keyboard.KEY_9)) {
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
 					KeyEvent.VK_9, '9'));
+
+		}else if (Keyboard.isKeyDown(Keyboard.KEY_PERIOD)) {
+			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
+					KeyEvent.VK_PERIOD, '.'));
 
 		}
 

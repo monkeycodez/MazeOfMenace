@@ -160,7 +160,7 @@ public class Util {
 		}
 	}
 
-	private static Color getColor(char c) {
+	public static Color getColor(char c) {
 		switch (c) {
 		case 'r':
 			return Color.red;
