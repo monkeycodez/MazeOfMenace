@@ -27,6 +27,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import run.Settings;
 import run.Util;
 
 public class FancyImageBuffer {
@@ -37,10 +38,9 @@ public class FancyImageBuffer {
 	private int x, y;
 	public static boolean isFancyWanted = true;
 	public boolean changed;
-	static{
-		if(Integer.parseInt(Util.getTxtMsg("config/fancytiles.cfg").trim()) == 0){
-			isFancyWanted = false;
-		}
+	static{			
+		isFancyWanted = Settings.isFt();
+			
 	}
 
 	public FancyImageBuffer() {

@@ -11,15 +11,17 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.glu.GLU;
+import run.Settings;
 import run.input.InputParse;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.*;
 
 public class GLDisplay {
 
-	public static final int fps = 50;
+	private static int fps = 50;
 
 	public static void startup() {
+		fps = Settings.getFps();
 		run();
 	}
 
@@ -49,7 +51,7 @@ public class GLDisplay {
 						GLDrawer.draw();
 			Display.update();
 			
-			Display.sync(30);
+			Display.sync(fps);
 
 
 			int e = glGetError();

@@ -36,6 +36,10 @@ import terminal.*;
  *
  */
 public class Init {
+	
+	static{
+		Settings.initSettings();
+	}
 	private static String optlocgl = "config/gl.conf";
 	/**
 	 * terminal is public to reduce complexity
@@ -84,14 +88,8 @@ public class Init {
 		dgn = d;
 	}
 	
-	private static boolean gloi = false, usegl = false;
 	public static boolean useGL(){
-		if(gloi) return usegl;
-		String s = Util.getTxtMsg(optlocgl);
-		s = s.trim();
-		if(Integer.parseInt(s) == 1) usegl = true;
-		gloi = true;
-		return usegl;
+		return Settings.isGl();
 	}
 
 }

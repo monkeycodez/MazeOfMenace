@@ -58,9 +58,7 @@ public class XTerm extends Terminal {
 			fullScreen = false;
 	private static XTerm xterm;
 	private static boolean fullScreenWanted, isTilesWanted = false;
-	protected static Font Xfont = new Font(Util.getTxtMsg("config/font.cfg")
-			.trim(), Font.PLAIN, Integer.parseInt(Util.getTxtMsg(
-			"config/fontsize.cfg").trim()));
+	protected static Font Xfont = new Font(Settings.getFnt(), Font.PLAIN, Settings.getFsz());
 	private static boolean choosen = false;
 	protected static Object osync = new Object(), sync = new Object(),
 			synobj = new Object();
@@ -68,13 +66,7 @@ public class XTerm extends Terminal {
 			"dat/MazeOfMenace.png");
 
 	static {
-		try {
-			if (Integer.parseInt(Util.getTxtMsg("./config/tiles.cfg").trim()) == 1) {
-				isTilesWanted = true;
-			}
-		} catch (Exception e) {
-
-		}
+		isTilesWanted = Settings.isTls();
 	}
 
 	/**
