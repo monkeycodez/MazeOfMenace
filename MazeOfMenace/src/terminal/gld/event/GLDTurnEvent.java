@@ -11,6 +11,7 @@
 package terminal.gld.event;
 
 import run.Init;
+import run.Settings;
 import terminal.gld.GLDungeonDraw;
 import entity.Entity;
 import entity.MoveDirection;
@@ -23,6 +24,7 @@ public class GLDTurnEvent implements GLDEvent {
 	private float inc = 0, rot = 0, orig = 0;
 	
 	public GLDTurnEvent(MoveDirection org, MoveDirection fin){
+		time = Settings.getGle();
 		float diff;
 		if(org == MoveDirection.EAST && fin == MoveDirection.NORTH)
 			diff = -90;

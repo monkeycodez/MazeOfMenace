@@ -18,6 +18,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
 import run.Init;
+import run.Settings;
 import run.Util;
 import run.input.InputParse;
 
@@ -82,7 +83,7 @@ public class GLDrawer {
 	private static int strdispl = 0;
 	
 
-	static int count = 0, p = 3;
+	static int count = 0, p = Settings.getGlp();
 
 	private static Button btn = new Button();
 

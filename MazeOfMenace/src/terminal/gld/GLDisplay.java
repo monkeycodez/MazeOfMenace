@@ -37,7 +37,7 @@ public class GLDisplay {
 
 	public static void run() {
 		try {
-			Display.setDisplayMode(new DisplayMode(1366, 786));
+			Display.setDisplayMode(new DisplayMode(Settings.getGlX(),Settings.getGlY()));
 			Display.setFullscreen(true);
 			Display.create();
 		} catch (LWJGLException e) {
@@ -53,7 +53,7 @@ public class GLDisplay {
 		glEnable(GL_DEPTH_TEST);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		GLU.gluPerspective(80, 1366 / 786, 1f, 500f);
+		GLU.gluPerspective(80, Settings.getGlX() / (float)Settings.getGlY(), 1f, 500f);
 		glMatrixMode(GL_MODELVIEW);
 
 		while (!Display.isCloseRequested()) {

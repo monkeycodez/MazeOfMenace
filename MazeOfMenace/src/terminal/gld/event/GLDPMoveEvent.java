@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import run.Init;
+import run.Settings;
 import terminal.gld.GLDungeonDraw;
 import entity.Entity;
 import entity.player.Player;
@@ -26,6 +27,7 @@ public  class GLDPMoveEvent implements GLDEvent{
 	float x = 0, y = 0, xinc = 0, yinc = 0;
 	
 	public GLDPMoveEvent(int ox, int oy, int nx, int ny){
+		time = Settings.getGle();
 		float xdiff = ox - nx;
 		float ydiff = oy - ny;
 		x = ox;

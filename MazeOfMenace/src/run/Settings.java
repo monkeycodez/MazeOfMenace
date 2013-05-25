@@ -15,7 +15,7 @@ public class Settings {
 
 	private static String fnt;
 	private static boolean gl, ft, tls;
-	private static int fps, fsz;
+	private static int fps, fsz, glX, glY, glp, gle;
 	
 	
 	public static String getFnt() {
@@ -77,6 +77,14 @@ public class Settings {
 				fps = Integer.parseInt(st2);
 			}else if("fsize".equals(st1)){
 				fsz = Integer.parseInt(st2);
+			}else if("glx".equals(st1)){
+				glX = Integer.parseInt(st2);
+			}else if("gly".equals(st1)){
+				glY = Integer.parseInt(st2);
+			}else if("glinpause".equals(st1)){
+				glp = Integer.parseInt(st2);
+			}else if("glep".equals(st1)){
+				gle = (Integer.parseInt(st2));
 			}
 
 		}
@@ -85,4 +93,32 @@ public class Settings {
 
 	
 	private Settings(){}
+
+
+
+
+	public static int getGlY() {
+		return glY;
+	}
+
+
+
+	public static int getGlX() {
+		return glX;
+	}
+
+
+
+
+	public static int getGlp() {
+		return glp;
+	}
+
+
+
+
+	public static int getGle() {
+		return gle;
+	}
+
 }
