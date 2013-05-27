@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Contributors:
- *     matthew - initial API and implementation
+ * matthew - initial API and implementation
  ******************************************************************************/
 package terminal.gld;
 
@@ -27,6 +27,7 @@ import dungeon.tile.StairUp;
 import dungeon.tile.Tile;
 import dungeon.tile.Wall;
 import engine.image.TextureDB;
+import entity.Entity;
 import entity.MoveDirection;
 import entity.player.Player;
 
@@ -84,23 +85,17 @@ public class GLDungeonDraw {
 		if ((currevent != null) && currevent.done()) {
 			currevent = null;
 		}
-		if (events.hasNext()) {
+		if (currevent == null && events.hasNext()) {
 			currevent = events.get();
 		}
 
 		if (currevent == null) {
-			glPushMatrix();
-			Init.getDungeon().getCurrentLevelObj();
-			Player p = Init.getDungeon().getPlayer();
-			int x = p.getX(), y = p.getY();
-			applyrot(p.getFacing());
-			glScalef(6, 6, 6);
-			glTranslatef(-x, yz, -y);
+			PlayerStart();
 			drawdgn();
 			drawEntity();
 			drawItems();
 			drawHUD();
-			glPopMatrix();
+			PlayerEnd();
 		} else {
 			glPushMatrix();
 			currevent.applyPLocStart();
@@ -113,6 +108,20 @@ public class GLDungeonDraw {
 		}
 		glDisable(GL_FOG);
 
+	}
+
+	public static void PlayerStart() {
+		Init.getDungeon().getCurrentLevelObj();
+		Player p = Init.getDungeon().getPlayer();
+		int x = p.getX(), y = p.getY();
+		glPushMatrix();
+		applyrot(p.getFacing());
+		glScalef(6, 6, 6);
+		glTranslatef(-x, yz, -y);
+	}
+
+	public static void PlayerEnd() {
+		glPopMatrix();
 	}
 
 	private static Color[] mkcolarr(String s) {
@@ -291,9 +300,7 @@ public class GLDungeonDraw {
 
 	private static void drawE(Tile t) {
 		glBindTexture(GL_TEXTURE_2D, t.getCurrEntity().getTexId());
-		glPushMatrix();
-		glTranslatef(t.getX(), 0, t.getY());
-		glScalef(.5f, .5f, .5f);
+
 		glBegin(GL_QUADS);
 		{
 			glTexCoord2f(1, 0);
@@ -333,6 +340,15 @@ public class GLDungeonDraw {
 			glVertex3f(.5f, .5f, -.5f);
 		}
 		glEnd();
+	}
+
+	public static void entityStart(Entity e) {
+		glPushMatrix();
+		glTranslatef(e.getX(), 0, e.getY());
+		glScalef(.5f, .5f, .5f);
+	}
+
+	public static void entityEnd(Entity e) {
 		glPopMatrix();
 	}
 
@@ -342,7 +358,21 @@ public class GLDungeonDraw {
 			for (Tile t : ta) {
 				if ((t.getCurrEntity() != null)
 						&& !(t.getCurrEntity() instanceof Player)) {
-					drawE(t);
+					if (currevent == null) {
+						entityStart(t.getCurrEntity());
+						drawE(t);
+						entityEnd(t.getCurrEntity());
+					} else {
+						if (!currevent.applyEntChStart(t
+								.getCurrEntity())) {
+							entityStart(t.getCurrEntity());
+						}
+						drawE(t);
+						if (!currevent.applyEnrChEnd(t
+								.getCurrEntity())) {
+							entityEnd(t.getCurrEntity());
+						}
+					}
 				}
 			}
 		}

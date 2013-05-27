@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Contributors:
- *     matthew - initial API and implementation
+ * matthew - initial API and implementation
  ******************************************************************************/
 package terminal.gld;
 
@@ -37,7 +37,8 @@ public class GLDisplay {
 
 	public static void run() {
 		try {
-			Display.setDisplayMode(new DisplayMode(Settings.getGlX(),Settings.getGlY()));
+			Display.setDisplayMode(new DisplayMode(Settings
+					.getGlX(), Settings.getGlY()));
 			Display.setFullscreen(true);
 			Display.create();
 		} catch (LWJGLException e) {
@@ -53,23 +54,34 @@ public class GLDisplay {
 		glEnable(GL_DEPTH_TEST);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		GLU.gluPerspective(80, Settings.getGlX() / (float)Settings.getGlY(), 1f, 500f);
+		GLU.gluPerspective(80,
+				Settings.getGlX() / (float) Settings.getGlY(),
+				1f, 500f);
 		glMatrixMode(GL_MODELVIEW);
+		exit: {
+			while (!Display.isCloseRequested()) {
+				glClear(GL_COLOR_BUFFER_BIT
+						| GL_DEPTH_BUFFER_BIT);
+				GLDrawer.draw();
+				Display.update();
 
-		while (!Display.isCloseRequested()) {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-						GLDrawer.draw();
-			Display.update();
-			
-			Display.sync(fps);
+				Display.sync(fps);
 
-
-			int e = glGetError();
-			if(e != GL11.GL_NO_ERROR)
-				System.out.println(e +" f " + org.lwjgl.opengl.Util.translateGLErrorString(e));
-			if (Keyboard.isKeyDown(Keyboard.KEY_END))
-				System.exit(9999);
+				int e = glGetError();
+				if (e != GL11.GL_NO_ERROR)
+					System.out.println(e
+							+ " f "
+							+ org.lwjgl.opengl.Util
+									.translateGLErrorString(e));
+				if (Keyboard.isKeyDown(Keyboard.KEY_END))
+					break exit;
+			}
+			Display.destroy();
+			Keyboard.destroy();
 		}
+		Display.destroy();
+		Keyboard.destroy();
+		System.exit(9999);
 	}
 
 }

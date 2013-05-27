@@ -382,5 +382,7 @@ public abstract class Entity extends AbstractObject implements Serializable {
 		if(Init.useGL()) return TextureDB.getTexture("./dat/tiles/fancy/entity/goblin.png").getTextureID();
 		return 0;
 	}
+	
+	public void notifyXY(){}
 
 }

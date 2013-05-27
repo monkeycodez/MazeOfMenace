@@ -18,7 +18,7 @@ import entity.MoveDirection;
 import entity.player.Player;
 import static org.lwjgl.opengl.GL11.*;
 
-public class GLDTurnEvent implements GLDEvent {
+public class GLDTurnEvent extends AbstractEGLDEvent {
 	
 	private int time = 10;
 	private float inc = 0, rot = 0, orig = 0;
@@ -55,15 +55,6 @@ public class GLDTurnEvent implements GLDEvent {
 		glPopMatrix();
 	}
 
-	@Override
-	public void applyEntChStart(Entity e) {
-
-	}
-
-	@Override
-	public void applyEnrChEnd(Entity e) {
-
-	}
 
 	@Override
 	public void drawFinalChange() {

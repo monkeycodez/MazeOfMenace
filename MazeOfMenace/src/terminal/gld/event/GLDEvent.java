@@ -17,8 +17,8 @@ public interface GLDEvent {
 	public void applyPLocStart();
 	public void applyPLocEnd();
 	
-	public void applyEntChStart(Entity e);
-	public void applyEnrChEnd(Entity e);
+	public boolean applyEntChStart(Entity e);
+	public boolean applyEnrChEnd(Entity e);
 	
 	public void drawFinalChange();
 	

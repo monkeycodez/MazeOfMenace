@@ -15,16 +15,19 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL15;
 import run.Init;
 import run.Settings;
 import terminal.gld.GLDungeonDraw;
 import entity.Entity;
 import entity.player.Player;
 
-public  class GLDPMoveEvent implements GLDEvent{
+public  class GLDPMoveEvent extends AbstractEGLDEvent{
 	
-	private int time = 10;
+	private int time = Settings.getGle();
 	float x = 0, y = 0, xinc = 0, yinc = 0;
+	private int nx, ny;
 	
 	public GLDPMoveEvent(int ox, int oy, int nx, int ny){
 		time = Settings.getGle();
@@ -32,8 +35,11 @@ public  class GLDPMoveEvent implements GLDEvent{
 		float ydiff = oy - ny;
 		x = ox;
 		y = oy;
+//		this.nx = nx;
+//		this.ny = ny;
 		xinc = xdiff / time;
 		yinc = ydiff / time;
+		Init.getDungeon().getPlayer().setLoc(ox, oy);
 	}
 
 	@Override
@@ -53,23 +59,6 @@ public  class GLDPMoveEvent implements GLDEvent{
 		
 	}
 
-	@Override
-	public void applyEntChStart(Entity e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void applyEnrChEnd(Entity e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void drawFinalChange() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean done() {

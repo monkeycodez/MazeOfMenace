@@ -17,9 +17,7 @@ public class GLDEventQue {
 
 	private ArrayList<GLDEvent> objs = new ArrayList<GLDEvent>();
 	
-	public GLDEventQue(){
-		
-	}
+	public GLDEventQue(){}
 	
 	public void put(GLDEvent e){
 		objs.add(e);
@@ -31,5 +29,9 @@ public class GLDEventQue {
 
 	public boolean hasNext(){
 		return !objs.isEmpty();
+	}
+	
+	public int size(){
+		return objs.size();
 	}
 }

@@ -71,6 +71,17 @@ public class Orc extends GeneralMonster {
 		super.setSpeed(200);
 		super.setHitchance(85);
 	}
+	
+
+	
+
+	@Override
+	public int getAttack() {
+		return 10;
+	}
+
+
+
 
 	/**
 	 * 
