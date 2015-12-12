@@ -6,37 +6,46 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Contributors:
- *     matthew - initial API and implementation
+ * matthew - initial API and implementation
  ******************************************************************************/
 package terminal.gld;
 
+import static org.lwjgl.opengl.GL11.GL_COMPILE;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
 import java.awt.Button;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL11.*;
 import run.Init;
 import run.Settings;
-import run.Util;
 import run.input.InputParse;
 
-public class GLDrawer {
+public class GLDrawer{
 
-	public static void draw() {
+	public static void draw(){
 		inputparse();
-		switch (Init.getState()) {
-			case DEAD: otherDraw();
-				break;
-			case HELP: otherDraw();
-				break;
-			case INVENTORY: otherDraw();
-				break;
+		switch(Init.getState()){
+			case DEAD:
+				otherDraw();
+			break;
+			case HELP:
+				otherDraw();
+			break;
+			case INVENTORY:
+				otherDraw();
+			break;
 			case NORMAL:
 				GLDungeonDraw.draw();
-				break;
-			case OTHER:
 				break;
 			case START:
 				otherDraw();
@@ -48,13 +57,13 @@ public class GLDrawer {
 	}
 
 	static TrueTypeFont fnt = new TrueTypeFont(new Font("Monospaced",
-			 Font.PLAIN, 40), true);
+		Font.PLAIN, 40), true);
 
-	public static void otherDraw() {
+	public static void otherDraw(){
 		String s = "";
 		char[][] charr = ((GLDummyTerm) Init.terminal).term;
-		for (int x = 0; x < 80; x++) {
-			for (int y = 0; y < 80; y++) {
+		for(int x = 0; x < 80; x++){
+			for(int y = 0; y < 80; y++){
 				s += charr[y][x];
 			}
 			s += '\n';
@@ -69,7 +78,16 @@ public class GLDrawer {
 		if(GLDummyTerm.changed()){
 			strdispl = glGenLists(1);
 			glNewList(strdispl, GL_COMPILE);
-			fnt.drawString(000, 600, s, 0, s.length()-1, .35f, .35f, TrueTypeFont.ALIGN_LEFT, GLDummyTerm.toColArr());
+			fnt.drawString(
+				000,
+				600,
+				s,
+				0,
+				s.length() - 1,
+				.35f,
+				.35f,
+				TrueTypeFont.ALIGN_LEFT,
+				GLDummyTerm.toColArr());
 			glEndList();
 			GLDummyTerm.donechanged();
 		}
@@ -79,209 +97,210 @@ public class GLDrawer {
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 	}
-	
+
 	private static int strdispl = 0;
-	
 
 	static int count = 0, p = Settings.getGlp();
 
 	private static Button btn = new Button();
 
 	@SuppressWarnings("deprecation")
-	private static void inputparse() {
-		if (GLDungeonDraw.inEvent())
+	private static void inputparse(){
+		if(GLDungeonDraw.inEvent()){
 			return;
+		}
 		count++;
-		if (count != p)
+		if(count != p){
 			return;
+		}
 		count = 0;
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_SPACE));
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				KeyEvent.VK_SPACE));
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_LEFT));
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+				KeyEvent.VK_LEFT));
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_RIGHT));
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+				KeyEvent.VK_RIGHT));
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_UP));
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				KeyEvent.VK_UP));
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_DOWN));
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
+				KeyEvent.VK_DOWN));
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_N)){
 			Init.getDungeon().getPlayer().turnLeft();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_M)){
 			Init.getDungeon().getPlayer().turnRight();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_EQUALS)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_EQUALS)){
 			System.out.println("1");
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_EQUALS));
+				KeyEvent.VK_EQUALS));
 
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_MINUS));
+				KeyEvent.VK_MINUS));
 
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)
-				&& (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-				|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_S)
+			&& (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+			|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_S, 'S'));
+				KeyEvent.VK_S, 'S'));
 
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_R)
-				&& (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-				|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_R)
+			&& (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+			|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
 			GLDungeonDraw.updatedgn();
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_R, 'R'));
+				KeyEvent.VK_R, 'R'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_H)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_H, 'h'));
+				KeyEvent.VK_H, 'h'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_B, 'b'));
+				KeyEvent.VK_B, 'b'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_Q)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_Q, 'q'));
+				KeyEvent.VK_Q, 'q'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_A)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_A, 'a'));
+				KeyEvent.VK_A, 'a'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_B, 'b'));
+				KeyEvent.VK_B, 'b'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_C)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_C, 'c'));
+				KeyEvent.VK_C, 'c'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_D, 'd'));
+				KeyEvent.VK_D, 'd'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_E)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_E, 'e'));
+				KeyEvent.VK_E, 'e'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_F)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_F, 'f'));
+				KeyEvent.VK_F, 'f'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_G)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_G, 'g'));
+				KeyEvent.VK_G, 'g'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_H)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_H, 'h'));
+				KeyEvent.VK_H, 'h'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_I)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_I, 'i'));
+				KeyEvent.VK_I, 'i'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_J)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_J, 'j'));
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
+				KeyEvent.VK_J, 'j'));
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_K)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_K, 'k'));
+				KeyEvent.VK_K, 'k'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_L)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_L, 'l'));
+				KeyEvent.VK_L, 'l'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_O)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_O, 'o'));
+				KeyEvent.VK_O, 'o'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_P)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_P, 'p'));
+				KeyEvent.VK_P, 'p'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_R)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_R, 'r'));
+				KeyEvent.VK_R, 'r'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_S)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_S, 's'));
+				KeyEvent.VK_S, 's'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_T)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_T, 't'));
+				KeyEvent.VK_T, 't'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_U)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_U, 'u'));
+				KeyEvent.VK_U, 'u'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_V)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_V, 'v'));
+				KeyEvent.VK_V, 'v'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_W)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_W, 'w'));
+				KeyEvent.VK_W, 'w'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_X)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_X, 'x'));
+				KeyEvent.VK_X, 'x'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_Y, 'y'));
+				KeyEvent.VK_Y, 'y'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_Z)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_Z, 'z'));
+				KeyEvent.VK_Z, 'z'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_0)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_0)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_0, '0'));
+				KeyEvent.VK_0, '0'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_1)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_1)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_1, '1'));
+				KeyEvent.VK_1, '1'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_2)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_2, '2'));
+				KeyEvent.VK_2, '2'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_3)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_3)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_3, '3'));
+				KeyEvent.VK_3, '3'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_4)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_4)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_4, '4'));
+				KeyEvent.VK_4, '4'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_5)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_5)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_5, '5'));
+				KeyEvent.VK_5, '5'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_6)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_6)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_6, '6'));
+				KeyEvent.VK_6, '6'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_7)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_7)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_7, '7'));
+				KeyEvent.VK_7, '7'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_8)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_8)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_8, '8'));
+				KeyEvent.VK_8, '8'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_9)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_9)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_9, '9'));
+				KeyEvent.VK_9, '9'));
 
-		}else if (Keyboard.isKeyDown(Keyboard.KEY_PERIOD)) {
+		}else if(Keyboard.isKeyDown(Keyboard.KEY_PERIOD)){
 			InputParse.inputParse(new KeyEvent(btn, 0, 0, 0,
-					KeyEvent.VK_PERIOD, '.'));
+				KeyEvent.VK_PERIOD, '.'));
 
 		}
 

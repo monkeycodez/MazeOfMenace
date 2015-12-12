@@ -25,18 +25,24 @@
  */
 package run.input;
 
+import items.AbstractArmor;
+import items.AbstractConsumeable;
+import items.AbstractItem;
+import items.AbstractWeapon;
+import items.OrbOfYendor;
+import java.awt.event.KeyEvent;
 import run.Init;
 import run.SaveAndLoad;
-import run.turn.*;
+import run.turn.Turn;
 import terminal.gld.GLDungeonDraw;
-import items.*;
-import java.awt.event.*;
 import dungeon.Dungeon;
 import dungeon.Level;
-import dungeon.tile.*;
-import entity.player.*;
+import dungeon.tile.Fountan;
+import dungeon.tile.Location;
+import entity.MoveDirection;
+import entity.player.Display;
+import entity.player.Player;
 import entity.player.inventory.InventoryDisplay;
-import entity.*;
 
 /**
  * this class is used in parisng during normal mode
@@ -44,16 +50,16 @@ import entity.*;
  * @author Matthew Gruda
  * 
  */
-public final class NormalModeParse {
+public final class NormalModeParse{
 
 	/**
 	 * parses the normal mode input
 	 * 
 	 * @param k
 	 */
-	protected static void inputParse(KeyEvent k) {
+	protected static void inputParse( KeyEvent k ){
 		// System.out.println(k);
-		switch (k.getKeyCode()) {
+		switch(k.getKeyCode()){
 			case KeyEvent.VK_DOWN:
 				parseMovement(MoveDirection.SOUTH);
 				break;
@@ -90,55 +96,55 @@ public final class NormalModeParse {
 		}
 	}
 
-	private static void helpStart() {
+	private static void helpStart(){
 		Init.setState(GameState.HELP);
 		Init.terminal.clearScreen();
-		HelpParse.drawHelpScreen();
+		GameState.drawHelpScreen();
 	}
 
-	private static void drink() {
-		if (Init.getDungeon().getPlayer().getLoc().getTile()
-				.getBasetile() instanceof Fountan) {
-			if (Init.getDungeon().getPlayer().getHp() + 10 >= Init
-					.getDungeon().getPlayer().getHpmax()) {
+	private static void drink(){
+		if(Init.getDungeon().getPlayer().getLoc().getTile()
+			.getBasetile() instanceof Fountan){
+			if(Init.getDungeon().getPlayer().getHp() + 10 >= Init
+				.getDungeon().getPlayer().getHpmax()){
 				Turn.turn();
 				Init.getDungeon()
-						.getPlayer()
-						.setHp(Init.getDungeon()
-								.getPlayer()
-								.getHpmax());
+				.getPlayer()
+				.setHp(Init.getDungeon()
+					.getPlayer()
+					.getHpmax());
 				Display.addMsg("`bYou are not very thirsty`");
-			} else {
+			}else{
 				Turn.turn();
 				Init.getDungeon()
-						.getPlayer()
-						.setHp(Init.getDungeon()
-								.getPlayer()
-								.getHp() + 10);
+				.getPlayer()
+				.setHp(Init.getDungeon()
+					.getPlayer()
+					.getHp() + 10);
 				Display.addMsg("`bYou drink some water!`");
 			}
 		}
-		
+
 	}
 
-	private static void grab() {
+	private static void grab(){
 		Player p = Init.getDungeon().getPlayer();
 		Location l = p.getLoc();
-		if (l.getTile().getObject() != null) {
+		if(l.getTile().getObject() != null){
 			AbstractItem o = l.getTile().getObject();
 			l.getTile().setObject(null);
 			o.pickUp();
-			if (o instanceof AbstractWeapon) {
+			if(o instanceof AbstractWeapon){
 				p.getIndv().add((AbstractWeapon) o);
 				Display.addMsg("You grabed the `r"
-						+ o.getName());
-			} else if (o instanceof AbstractArmor) {
+					+ o.getName());
+			}else if(o instanceof AbstractArmor){
 				p.getIndv().add((AbstractArmor) o);
 				Display.addMsg("You grabed the `g"
-						+ o.getName());
-			} else if (o instanceof AbstractConsumeable) {
+					+ o.getName());
+			}else if(o instanceof AbstractConsumeable){
 				p.getIndv().add((AbstractConsumeable) o);
-			} else if (o instanceof OrbOfYendor) {
+			}else if(o instanceof OrbOfYendor){
 				OrbOfYendor or = (OrbOfYendor) o;
 				Display.addMsg("`fYou Have The +10 Orb of Yendor\nEscape The Dungeon`");
 				p.getIndv().setorb(or);
@@ -154,21 +160,18 @@ public final class NormalModeParse {
 	 * @param direct
 	 *                to move
 	 */
-	private static void parseMovement(MoveDirection direct) {
+	private static void parseMovement( MoveDirection direct ){
 		boolean b = Init.getDungeon().getPlayer().makeMove(direct);
-		if (!b) {
+		if(!b){
 			return;
 		}
 		Turn.turn();
 	}
 
-	private static void normalKeyParse(KeyEvent c) {
-		switch (c.getKeyChar()) {
+	private static void normalKeyParse( KeyEvent c ){
+		switch(c.getKeyChar()){
 			case 'i':
 				goToInventory();
-				break;
-			case 'g':
-				grabItem();
 				break;
 			case 'S':
 				SaveAndLoad.save();
@@ -185,37 +188,34 @@ public final class NormalModeParse {
 	/**
 	 * moves player up/down one level
 	 */
-	private static void switchLvl() {
+	private static void switchLvl(){
 		GLDungeonDraw.updatedgn();
 		Player p = Init.getDungeon().getPlayer();
 		Level lvl = Init.getDungeon().getCurrentLevelObj();
 		Dungeon d = Init.getDungeon();
 		Init.terminal.clearScreen();
-		if (p.getX() == lvl.getUpStrX() && p.getY() == lvl.getUpStrY()) {
-			if (Init.getDungeon().levelDown())
+		if(p.getX() == lvl.getUpStrX() && p.getY() == lvl.getUpStrY()){
+			if(Init.getDungeon().levelDown()){
 				p.moveAnywhere(d.getCurrentLevelObj()
-						.getDwStrX(), d
-						.getCurrentLevelObj()
-						.getDwStrY(), d
-						.getCurrentLevelObj().depth,
-						lvl.depth);
-			else
+					.getDwStrX(), d
+					.getCurrentLevelObj()
+					.getDwStrY(), d
+					.getCurrentLevelObj().depth,
+					lvl.depth);
+			}else{
 				return;
+			}
 		}
-		if (p.getX() == lvl.getDwStrX() && p.getY() == lvl.getDwStrY()) {
+		if(p.getX() == lvl.getDwStrX() && p.getY() == lvl.getDwStrY()){
 			Init.getDungeon().levelUp();
 			p.moveAnywhere(d.getCurrentLevelObj().getUpStrX(), d
-					.getCurrentLevelObj().getUpStrY(), d
-					.getCurrentLevelObj().depth, lvl.depth);
+				.getCurrentLevelObj().getUpStrY(), d
+				.getCurrentLevelObj().depth, lvl.depth);
 		}
 		Init.getDungeon().draw();
 	}
 
-	private static void grabItem() {
-
-	}
-
-	private static void goToInventory() {
+	private static void goToInventory(){
 		Init.setState(GameState.INVENTORY);
 		InventoryDisplay.draw();
 	}

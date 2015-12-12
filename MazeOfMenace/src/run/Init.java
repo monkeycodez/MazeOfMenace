@@ -23,14 +23,11 @@
 
 package run;
 
-import java.util.Properties;
-import org.lwjgl.LWJGLUtil;
-import dungeon.Dungeon;
-import run.input.GameState;
 import java.io.File;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import terminal.*;
+import run.input.GameState;
+import terminal.Terminal;
+import dungeon.Dungeon;
 
 /**
  * contains the main method and some essental
@@ -39,16 +36,17 @@ import terminal.*;
  * @author Matthew Gruda
  * 
  */
-public class Init {
+public class Init{
 
-	static {
-		if (System.getProperty("runningInEclipse") == null)
+	static{
+		if(System.getProperty("runningInEclipse") == null){
 			System.setProperty("org.lwjgl.librarypath", new File(
-					System.getProperty("user.dir"),
-					"natives").getAbsolutePath());
+				System.getProperty("user.dir"),
+				"natives").getAbsolutePath());
+		}
 	}
 
-	static {
+	static{
 		Settings.initSettings();
 	}
 
@@ -59,34 +57,36 @@ public class Init {
 
 	protected static GameState state = GameState.START;
 
-	private static Dungeon dgn;
+	public static Dungeon dgn;
 
 	/**
 	 * main method
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		try {
+	public static void main( String[] args ){
+		try{
 			terminal.clearScreen();
 			state = GameState.START;
 			Startup.printStartupMsg();
 			terminal.enterPrivateMode();
 			// start game
-		} catch (UnsatisfiedLinkError e) {
+		}catch(UnsatisfiedLinkError e){
 			Object[] options = {
-					"EXIT"
+				"EXIT"
 			};
-			int n = JOptionPane.showOptionDialog(null,
-					"Your native libs need to be in ./natives\n error message: \n"
-							+ e.getMessage(),
-					"ERROR",
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null,  
-					options,  // the titles of buttons
-					options[0]); // default button title
+			int n = JOptionPane.showOptionDialog(
+				null,
+				"Your native libs need to be in ./natives\n error message: \n"
+					+ e.getMessage(),
+				"ERROR",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,  // the titles of buttons
+				options[0]); // default button title
 			e.printStackTrace();
-			
+
 			System.exit(0);
 		}
 	}
@@ -96,7 +96,7 @@ public class Init {
 	 * 
 	 * @return
 	 */
-	public static Dungeon getDungeon() {
+	public static Dungeon getDungeon(){
 		return dgn;
 	}
 
@@ -105,7 +105,7 @@ public class Init {
 	 * 
 	 * @return
 	 */
-	public static GameState getState() {
+	public static GameState getState(){
 		return state;
 	}
 
@@ -114,7 +114,7 @@ public class Init {
 	 * 
 	 * @param s
 	 */
-	public static void setState(GameState s) {
+	public static void setState( GameState s ){
 		state = s;
 	}
 
@@ -124,11 +124,11 @@ public class Init {
 	 * @param d
 	 *                dungeon to use
 	 */
-	protected static void setDgn(Dungeon d) {
+	protected static void setDgn( Dungeon d ){
 		dgn = d;
 	}
 
-	public static boolean useGL() {
+	public static boolean useGL(){
 		return Settings.isGl();
 	}
 

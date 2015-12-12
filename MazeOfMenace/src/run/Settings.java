@@ -6,118 +6,119 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Contributors:
- *     matthew - initial API and implementation
+ * matthew - initial API and implementation
  ******************************************************************************/
 package run;
 
+import java.io.IOException;
+import json.JSONObj;
+import json.parser.JSONParseException;
+import json.parser.JSONParser;
 
-public class Settings {
+public class Settings{
 
 	private static String fnt;
+
 	private static boolean gl, ft, tls;
+
 	private static int fps, fsz, glX, glY, glp, gle;
-	
-	
-	public static String getFnt() {
+
+	public static String getFnt(){
 		return fnt;
 	}
 
-
-
-	
-	public static boolean isGl() {
+	public static boolean isGl(){
 		return gl;
 	}
 
-
-
-	
-	public static boolean isFt() {
+	public static boolean isFt(){
 		return ft;
 	}
 
-
-
-	
-	public static boolean isTls() {
+	public static boolean isTls(){
 		return tls;
 	}
 
-
-
-	
-	public static int getFps() {
+	public static int getFps(){
 		return fps;
 	}
 
-
-
-	
-	public static int getFsz() {
+	public static int getFsz(){
 		return fsz;
 	}
 
-
-
 	public static void initSettings(){
-		String s = Util.getTxtMsg("config/mm.cfg");
-		String[] sarr = s.split("\n");
-		for(String str : sarr){
-			String st1 = str.split("=")[0];
-			String st2 = str.split("=")[1];
-			if(st1.equals("gl")){
-				gl = Boolean.parseBoolean(st2);
-			}else if("fnt".equals(st1)){
-				fnt = st2;
-			}else if("ftiles".equals(st1)){
-				ft = Boolean.parseBoolean(st2);
-			}else if("btiles".equals(st1)){
-				tls = Boolean.parseBoolean(st2);
-			}else if("fps".equals(st1)){
-				fps = Integer.parseInt(st2);
-			}else if("fsize".equals(st1)){
-				fsz = Integer.parseInt(st2);
-			}else if("glx".equals(st1)){
-				glX = Integer.parseInt(st2);
-			}else if("gly".equals(st1)){
-				glY = Integer.parseInt(st2);
-			}else if("glinpause".equals(st1)){
-				glp = Integer.parseInt(st2);
-			}else if("glep".equals(st1)){
-				gle = (Integer.parseInt(st2));
-			}
-
+		JSONObj j = null;
+		try{
+			j = JSONParser.parse_from_path("config/config.json");
+		}catch(JSONParseException | IOException e){
+			e.printStackTrace();
+			return;
 		}
+		System.out.println(j);
+		fps = j.geti("fps");
+		fnt = j.gets("font.name");
+		fsz = j.geti("font.size");
+		glX = j.geti("gl.x");
+		glY = j.geti("gl.y");
+		glp = j.geti("gl.ipause");
+		gle = j.geti("gl.ep");
+		switch(j.gets("disp")){
+			case "term":
+				break;
+			case "GL":
+				gl = true;
+			case "ftiles":
+				ft = true;
+			case "btiles":
+				tls = true;
+		}
+		/*	String s = Util.getTxtMsg("config/mm.cfg");
+			String[] sarr = s.split("\n");
+			for(String str : sarr){
+				String st1 = str.split("=")[0];
+				String st2 = str.split("=")[1];
+				if(st1.equals("gl")){
+					gl = Boolean.parseBoolean(st2);
+				}else if("fnt".equals(st1)){
+					fnt = st2;
+				}else if("ftiles".equals(st1)){
+					ft = Boolean.parseBoolean(st2);
+				}else if("btiles".equals(st1)){
+					tls = Boolean.parseBoolean(st2);
+				}else if("fps".equals(st1)){
+					fps = Integer.parseInt(st2);
+				}else if("fsize".equals(st1)){
+					fsz = Integer.parseInt(st2);
+				}else if("glx".equals(st1)){
+					glX = Integer.parseInt(st2);
+				}else if("gly".equals(st1)){
+					glY = Integer.parseInt(st2);
+				}else if("glinpause".equals(st1)){
+					glp = Integer.parseInt(st2);
+				}else if("glep".equals(st1)){
+					gle = (Integer.parseInt(st2));
+				}
+
+			}*/
 	}
 
+	private Settings() {
+	}
 
-	
-	private Settings(){}
-
-
-
-
-	public static int getGlY() {
+	public static int getGlY(){
 		return glY;
 	}
 
-
-
-	public static int getGlX() {
+	public static int getGlX(){
 		return glX;
 	}
 
-
-
-
-	public static int getGlp() {
+	public static int getGlp(){
 		return glp;
 	}
 
-
-
-
-	public static int getGle() {
+	public static int getGle(){
 		return gle;
 	}
 

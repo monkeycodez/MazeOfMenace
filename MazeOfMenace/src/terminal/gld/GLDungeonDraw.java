@@ -43,12 +43,6 @@ public class GLDungeonDraw {
 
 	private static GLDEvent currevent = null;
 
-	public static float[] bottomv = {
-			.5f, -.5f, .5f, // top left
-			-.5f, -.5f, .5f, // top right
-			-.5f, -.5f, -.5f, // bottom right
-			.5f, -.5f, -.5f
-	};
 
 	public static void addEvent(GLDEvent e) {
 		events.put(e);
@@ -436,6 +430,7 @@ public class GLDungeonDraw {
 		y = 0;
 		glBegin(GL_QUADS);
 		{
+			//front
 			glTexCoord2f(0, 0);
 			glVertex3f(.5f + x, .5f, .5f + y);
 			glTexCoord2f(1, 0);

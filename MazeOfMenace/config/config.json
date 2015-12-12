@@ -1,0 +1,14 @@
+{
+	disp : "ftiles"
+	font : {
+		size : 14,
+		name : "Monospaced"
+	}
+	fps : 30
+	gl : {
+		x : 1024
+		y : 768
+		ipause : 2
+		ep : 2	
+	}
+}

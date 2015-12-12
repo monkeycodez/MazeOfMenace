@@ -25,23 +25,21 @@
  */
 package entity.mons;
 
+import java.io.Serializable;
+import java.util.Random;
 import run.Init;
-import run.turn.Turn;
-import terminal.gld.GLDungeonDraw;
-import terminal.gld.event.GLDEMoveEvent;
-import terminal.gld.event.GLDPMoveEvent;
 import dungeon.Level;
 import dungeon.tile.Floor;
-import entity.*;
-import entity.player.*;
-import java.io.Serializable;
-import java.util.*;
+import entity.Entity;
+import entity.EntityCalcs;
+import entity.MoveDirection;
+import entity.player.Player;
 
 /**
  * @author Matthew Gruda
  * 
  */
-public abstract class GeneralMonster extends Entity implements Serializable {
+public abstract class GeneralMonster extends Entity implements Serializable{
 
 	/** 
 	 * 
@@ -54,23 +52,18 @@ public abstract class GeneralMonster extends Entity implements Serializable {
 
 	private static final Random r = new Random();
 
-	/**
-	 * 
-	 */
-	public GeneralMonster(int x, int y, int z) {
-		super(x, y, z);
-	}
-
 	public GeneralMonster() {
 	}
 
-	private boolean findPlayer(int x, int y, Level lvl) {
+	private boolean findPlayer( int x, int y, Level lvl ){
 		Player p = Init.getDungeon().getPlayer();
 		xPlayer = p.getX();
 		yPlayer = p.getY();
-		if (xPlayer - getX() >= -4 && xPlayer - getX() <= 4)
-			if (yPlayer - getY() >= -4 && yPlayer - getY() <= 4)
+		if(xPlayer - getX() >= -4 && xPlayer - getX() <= 4){
+			if(yPlayer - getY() >= -4 && yPlayer - getY() <= 4){
 				return true;
+			}
+		}
 		/*
 		 * Unused junk for(int i = x - 4; i < x+4; i++){ for(int c = y -
 		 * 4; c <
@@ -85,7 +78,7 @@ public abstract class GeneralMonster extends Entity implements Serializable {
 	/**
 	 * @return the direc
 	 */
-	public MoveDirection getDirec() {
+	public MoveDirection getDirec(){
 		return direc;
 	}
 
@@ -93,28 +86,28 @@ public abstract class GeneralMonster extends Entity implements Serializable {
 	 * @param direc
 	 *                the direc to set
 	 */
-	public void setDirec(MoveDirection direc) {
+	public void setDirec( MoveDirection direc ){
 		this.direc = direc;
 	}
 
-	private MoveDirection playerDirection() {
+	private MoveDirection playerDirection(){
 		int xDiff = super.getX() - xPlayer, yDiff = super.getY()
-				- yPlayer;
-		if (yDiff > 0) {
+			- yPlayer;
+		if(yDiff > 0){
 			return MoveDirection.NORTH;
-		} else if (yDiff < 0) {
+		}else if(yDiff < 0){
 			return MoveDirection.SOUTH;
-		} else if (xDiff < 0) {
+		}else if(xDiff < 0){
 			return MoveDirection.EAST;
 		}
 		return MoveDirection.WEST;
 	}
 
-	private MoveDirection randomDirection() {
+	private MoveDirection randomDirection(){
 		int c = 0;
-		while (true) {
+		while(true){
 			c++;
-			switch (r.nextInt(4)) {
+			switch(r.nextInt(4)){
 				case 0:
 					direc = MoveDirection.EAST;
 					break;
@@ -128,41 +121,43 @@ public abstract class GeneralMonster extends Entity implements Serializable {
 					direc = MoveDirection.WEST;
 					break;
 			}
-			if (super.canMove(direc) || c > 100) {
+			if(super.canMove(direc) || c > 100){
 				return direc;
 			}
 		}
 	}
 
+	@Override
 	public abstract void queMove();
 
+	@Override
 	public abstract void act();
 
-	public void act(Entity e) {
-		if (!super.notDead()) {
+	public void act( Entity e ){
+		if(!super.notDead()){
 			return;
 		}
 		super.setMoveFlag(false);
-		if (!findPlayer(super.getX(), super.getY(), Init.getDungeon()
-				.getCurrentLevelObj())) {
+		if(!findPlayer(super.getX(), super.getY(), Init.getDungeon()
+			.getCurrentLevelObj())){
 			direc = randomDirection();
-		} else {
+		}else{
 			direc = playerDirection();
-			if (canAttack(direc)) {
+			if(canAttack(direc)){
 				super.setMoveFlag(true);
-			} else if (!super.canMove(direc)) {
+			}else if(!super.canMove(direc)){
 				direc = randomDirection();
 			}
 		}
-		if (super.isMoveFlag() && super.canAttack(direc)) {
+		if(super.isMoveFlag() && super.canAttack(direc)){
 			super.attack(getDirec(), e);
-		} else if (super.canMove(direc)) {
-			if (this.findPlayer(getX(), getY(), Init.getDungeon()
-					.getCurrentLevelObj()))
-				if (Init.useGL()) {
+		}else if(super.canMove(direc)){
+			if(findPlayer(getX(), getY(), Init.getDungeon()
+				.getCurrentLevelObj())){
+				if(Init.useGL()){
 					int ox = getX(), oy = getY();
 					int nx = ox, ny = oy;
-					switch (direc) {
+					switch(direc){
 						case EAST:
 							nx--;
 							break;
@@ -178,62 +173,72 @@ public abstract class GeneralMonster extends Entity implements Serializable {
 						default:
 							break;
 					}
-//					GLDungeonDraw.addEvent(new GLDEMoveEvent(
-//							e, ox, oy, nx, ny));
+					//					GLDungeonDraw.addEvent(new GLDEMoveEvent(
+					//							e, ox, oy, nx, ny));
 				}
+			}
 			super.move(getDirec(), e);
 
 		}
 
 	}
 
-	public boolean canAttack(MoveDirection direction) {
-		switch (direction) {
+	@Override
+	public boolean canAttack( MoveDirection direction ){
+		switch(direction){
 			case EAST:
-				if (Init.getDungeon().getCurrentLevelObj()
-						.getlvl()[super.getX() + 1][super
-						.getY()].getBasetile() instanceof Floor
-						&& Init.getDungeon()
-								.getCurrentLevelObj()
-								.getlvl()[super
-								.getX() + 1][super
-								.getY()]
-								.getCurrEntity() instanceof Player)
+				if(Init.getDungeon().getCurrentLevelObj()
+					.getlvl()[super.getX() + 1][super
+					.getY()].getBasetile() instanceof Floor
+					&&
+					Init.getDungeon()
+						.getCurrentLevelObj()
+						.getlvl()[super
+						.getX() + 1][super
+						.getY()]
+						.getCurrEntity() instanceof Player){
 					return true;
+				}
 			case NORTH:
-				if (Init.getDungeon().getCurrentLevelObj()
-						.getlvl()[super.getX()][super
-						.getY() - 1].getBasetile() instanceof Floor
-						&& Init.getDungeon()
-								.getCurrentLevelObj()
-								.getlvl()[super
-								.getX()][super
-								.getY() - 1]
-								.getCurrEntity() instanceof Player)
+				if(Init.getDungeon().getCurrentLevelObj()
+					.getlvl()[super.getX()][super
+					.getY() - 1].getBasetile() instanceof Floor
+					&&
+					Init.getDungeon()
+						.getCurrentLevelObj()
+						.getlvl()[super
+						.getX()][super
+						.getY() - 1]
+						.getCurrEntity() instanceof Player){
 					return true;
+				}
 			case SOUTH:
-				if (Init.getDungeon().getCurrentLevelObj()
-						.getlvl()[super.getX()][super
-						.getY() + 1].getBasetile() instanceof Floor
-						&& Init.getDungeon()
-								.getCurrentLevelObj()
-								.getlvl()[super
-								.getX()][super
-								.getY() + 1]
-								.getCurrEntity() instanceof Player)
+				if(Init.getDungeon().getCurrentLevelObj()
+					.getlvl()[super.getX()][super
+					.getY() + 1].getBasetile() instanceof Floor
+					&&
+					Init.getDungeon()
+						.getCurrentLevelObj()
+						.getlvl()[super
+						.getX()][super
+						.getY() + 1]
+						.getCurrEntity() instanceof Player){
 					return true;
+				}
 				break;
 			case WEST:
-				if (Init.getDungeon().getCurrentLevelObj()
-						.getlvl()[super.getX() - 1][super
-						.getY()].getBasetile() instanceof Floor
-						&& Init.getDungeon()
-								.getCurrentLevelObj()
-								.getlvl()[super
-								.getX() - 1][super
-								.getY()]
-								.getCurrEntity() instanceof Player)
+				if(Init.getDungeon().getCurrentLevelObj()
+					.getlvl()[super.getX() - 1][super
+					.getY()].getBasetile() instanceof Floor
+					&&
+					Init.getDungeon()
+						.getCurrentLevelObj()
+						.getlvl()[super
+						.getX() - 1][super
+						.getY()]
+						.getCurrEntity() instanceof Player){
 					return true;
+				}
 				break;
 			default:
 				break;
@@ -243,10 +248,12 @@ public abstract class GeneralMonster extends Entity implements Serializable {
 
 	public abstract int difficulty();
 
-	protected void die(Entity e) {
-		if (e instanceof GeneralMonster) {
+	@Override
+	protected void die( Entity e ){
+		if(e instanceof GeneralMonster){
 			GeneralMonster g = (GeneralMonster) e;
-			EntityCalcs.createDropWeapon(g.difficulty(), g.getLoc());
+			EntityCalcs
+				.createDropWeapon(g.difficulty(), g.getLoc());
 		}
 		super.die(e);
 	}

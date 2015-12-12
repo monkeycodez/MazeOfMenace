@@ -25,11 +25,10 @@
  */
 package generator;
 
-import entity.player.*;
-import java.util.*;
+import dungeon.Dungeon;
 import dungeon.Level;
-import dungeon.tile.*;
-import run.Init;
+import dungeon.tile.StairUp;
+import entity.player.Player;
 
 /**
  * static methods for player generation should only be called by dungeon during
@@ -38,21 +37,22 @@ import run.Init;
  * @author matthew
  * 
  */
-public final class GeneratePlayer {
+public final class GeneratePlayer{
 
 	/**
 	 * generates a player, placing it at the up stair location; eventually
 	 * make diffrent player classes: fighter, wizard, ect.
 	 */
-	public static void generatePlayer(Level lvl) {
-		for (int x = 0; x < 64; x++) {
-			for (int y = 0; y < 32; y++) {
-				if(lvl.getlvl()[x][y].getBasetile() instanceof StairUp)
-				Init.getDungeon()
-						.setPlayer(new Player(x, y, 0));
+	public static void generatePlayer( Dungeon dgn, Level lvl ){
+		for(int x = 0; x < 64; x++){
+			for(int y = 0; y < 32; y++){
+				if(lvl.getlvl()[x][y].getBasetile() instanceof StairUp){
+					dgn
+					.setPlayer(new Player(x, y, 0));
+					return;
+				}
 			}
 		}
-		assert Init.getDungeon().getPlayer() != null : "could not place player";
+		assert dgn.getPlayer() != null : "could not place player";
 	}
-
 }
