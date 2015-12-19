@@ -28,9 +28,8 @@ package dungeon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import dungeon.tile.Tile;
-import dungeon.tile.Wall;
+import dungeon.tile.TileTemplate;
 import entity.mons.GeneralMonster;
-import generator.GenerateMonster;
 
 /**
  * @author Matthew Gruda will hold each individual level
@@ -38,75 +37,47 @@ import generator.GenerateMonster;
 
 public class Level implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * to simplify things, these will be public final. as objects their
-	 * refrences will not be able to be changes, but methods will act upon them
-	 * 
-	 * lvl - holds everything in the level, monsters, tiles playes, ect monsters
-	 * - holds monsters for easier refrence
-	 * 
-	 */
+	private Dungeon from;
+
 	private Tile[][] lvl = new Tile[64][32];
 
-	public final ArrayList<GeneralMonster> monsters = new ArrayList<GeneralMonster>(
-		0);
+	public final ArrayList<GeneralMonster> monsters =
+		new ArrayList<GeneralMonster>(0);
 
 	public final int depth;
 
-	private int monsCount = 0;
-
 	private int upStrX, upStrY, dwStrX, dwStrY;
 
-	/**
-	 * depth will determine fixed or random level and monster difficulty
-	 * GenerateLevel.generateLevel(this) or simiar
-	 * 
-	 * method will be called to make level
-	 */
-	public Level(int depth) {
+	public Level(int depth, Dungeon from, TileTemplate[][] map) {
 		this.depth = depth;
-		preProccess(this);
-	}
-
-	public Tile getlvl()[][]{
-		return lvl;
-	}
-
-	/**
-	 * makes all tiles walls should be called first to prevent level gen
-	 * accident (sides end in wall, ect.)
-	 * 
-	 * @param lvl
-	 *            = the level to operate on
-	 */
-	private static void preProccess( Level lvl ){
-		for(int i = 0; i < 64; i++){
-			for(int c = 0; c < 32; c++){
-				lvl.lvl[i][c] = new Tile(i, c, new Wall());
+		this.from = from;
+		lvl = new Tile[map.length][map[0].length];
+		for(int x = 0; x < map.length; x++){
+			for(int y = 0; y < map[0].length; y++){
+				lvl[x][y] = new Tile(x, y, map[x][y], this);
 			}
 		}
 	}
 
-	/**
-	 * hides all tiles. used by makeLOS in Player used for makeing tiles out of
-	 * veiw
-	 */
-	public void hide(){
-		for(int i = 0; i < 64; i++){
-			for(int c = 0; c < 32; c++){
-				lvl[i][c].setInView(false);
-			}
+	public Tile getT( int x, int y ){
+		if(x < 0 || x >= lvl.length){
+			return null;
 		}
+		if(y < 0 || y >= lvl[0].length){
+			return null;
+		}
+		return lvl[x][y];
+	}
+
+	public Dungeon get_from(){
+		return from;
 	}
 
 	/**
-	 * @return the depth
-	 */
+		 * @return the depth
+		 */
 	public int getDepth(){
 		return depth;
 	}
@@ -171,11 +142,11 @@ public class Level implements Serializable{
 		this.dwStrY = dwStrY;
 	}
 
-	public void dynMonGen(){
-		monsCount++;
-		if(monsCount == 10){
-			monsCount = 0;
-			GenerateMonster.generateDynamicMonster(this);
-		}
+	public int xlen(){
+		return lvl.length;
+	}
+
+	public int ylen(){
+		return lvl[0].length;
 	}
 }

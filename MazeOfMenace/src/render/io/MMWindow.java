@@ -6,6 +6,10 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
@@ -24,6 +28,10 @@ public class MMWindow{
 	private BufferedImage disp, buf;
 
 	private Graphics2D gbuf;
+
+	private KeyEvent laste = null;
+
+	private boolean close;
 
 	public MMWindow() {
 	}
@@ -66,6 +74,29 @@ public class MMWindow{
 		win.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		win.setLayout(new BorderLayout());
 		panel = new MWPanel();
+		win.addWindowListener(new WindowAdapter(){
+
+			@Override
+			public void windowClosing( WindowEvent e ){
+				close = true;
+			}
+		});
+		win.addKeyListener(new KeyListener(){
+
+			@Override
+			public void keyTyped( KeyEvent e ){
+
+			}
+
+			@Override
+			public void keyReleased( KeyEvent e ){
+			}
+
+			@Override
+			public void keyPressed( KeyEvent e ){
+				laste = e;
+			}
+		});
 		win.add(panel, BorderLayout.CENTER);
 		panel.setMinimumSize(new Dimension(640, 480));
 		win.pack();
@@ -98,6 +129,16 @@ public class MMWindow{
 		disp = buf;
 		buf = tmp;
 		win.repaint();
+	}
+
+	public KeyEvent get_last_event(){
+		KeyEvent k = laste;
+		laste = null;
+		return k;
+	}
+
+	public boolean is_close_requested(){
+		return close;
 	}
 
 }

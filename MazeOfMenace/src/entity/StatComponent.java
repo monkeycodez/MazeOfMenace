@@ -4,7 +4,33 @@ public class StatComponent{
 
 	private int attack;
 
-	private int hitchance, hp, hpmax, defense;
+	private int hitchance, hp, hpmax, defense, speed;
+
+	private String name;
+
+	public StatComponent(int attack, int hitchance, int hp, int hpmax,
+		int defense, int speed, String name) {
+		super();
+		this.attack = attack;
+		this.hitchance = hitchance;
+		this.hp = hp;
+		this.hpmax = hpmax;
+		this.defense = defense;
+		setSpeed(speed);
+		setName(name);
+	}
+
+	@Override
+	public StatComponent clone(){
+		return new StatComponent(
+			attack,
+			hitchance,
+			hp,
+			hpmax,
+			defense,
+			speed,
+			name);
+	}
 
 	public int getAttack(){
 		return attack;
@@ -44,6 +70,22 @@ public class StatComponent{
 
 	public void setDefense( int defense ){
 		this.defense = defense;
+	}
+
+	public int getSpeed(){
+		return speed;
+	}
+
+	public void setSpeed( int speed ){
+		this.speed = speed;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public void setName( String name ){
+		this.name = name;
 	}
 
 }

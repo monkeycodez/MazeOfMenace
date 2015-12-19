@@ -22,11 +22,13 @@
  ******************************************************************************/
 package dungeon.tile;
 
-import java.awt.Image;
+import items.AbstractItem;
 import java.io.Serializable;
 import java.util.LinkedList;
-import terminal.FancyImageBuffer;
+import render.draw.DrawComponent;
 import dungeon.Level;
+import dungeon.tile.template.TileInteract;
+import entity.Entity;
 
 /**
  * 
@@ -41,17 +43,23 @@ import dungeon.Level;
  */
 public class Tile implements Serializable{
 
-	private DrawComponent dr = new DrawComponent(this);
+	private DrawComponent dr;
 
 	public DrawComponent getDcomp(){
 		return dr;
 	}
 
-	private LinkedList<AbstractObject> objs = new LinkedList<>();
+	private LinkedList<AbstractItem> objs = new LinkedList<>();
 
 	private final int x, y;
 
-	private final Level at = null;
+	private Level at;
+
+	private Entity e_at;
+
+	private TileInteract inter;
+
+	private TileTemplate from;
 
 	//OLD STUFF
 
@@ -60,27 +68,38 @@ public class Tile implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private BaseTileType basetile;
-
 	private boolean seen, inView;
 
 	public boolean genFlag1;
 
-	public Tile(int x, int y, BaseTileType b) {
+	public Tile(int x, int y, TileTemplate t, Level at) {
+		from = t;
+		dr = from.create_new_draw_component();
+		inter = t.create_new_interaction(this);
 		this.x = x;
 		this.y = y;
 		seen = false;
 		inView = false;
-		basetile = b;
 		genFlag1 = false;
+		this.at = at;
 	}
 
-	private void drawf( Image i, int x, int y ){
-		FancyImageBuffer.buffer.addImage(x, y, i);
+	public TileTemplate getTemp(){
+		return from;
 	}
 
-	public BaseTileType getBasetile(){
-		return basetile;
+	public void setTemp( TileTemplate t ){
+		from = t;
+		dr = from.create_new_draw_component();
+		inter = t.create_new_interaction(this);
+	}
+
+	public TileInteract getInteract(){
+		return inter;
+	}
+
+	public int getType(){
+		return from.type();
 	}
 
 	/**
@@ -112,8 +131,40 @@ public class Tile implements Serializable{
 		return y;
 	}
 
+	public boolean can_walk(){
+		return from.can_walk();
+	}
+
 	public Level getLat(){
 		return at;
+	}
+
+	public Entity getCurrEntity(){
+		return e_at;
+	}
+
+	public void set_e_at( Entity e ){
+		e_at = e;
+	}
+
+	public void setObject( AbstractItem o ){
+		objs.add(o);
+	}
+
+	public Tile north(){
+		return at.getT(x, y - 1);
+	}
+
+	public Tile south(){
+		return at.getT(x, y + 1);
+	}
+
+	public Tile east(){
+		return at.getT(x + 1, y);
+	}
+
+	public Tile west(){
+		return at.getT(x - 1, y);
 	}
 
 }

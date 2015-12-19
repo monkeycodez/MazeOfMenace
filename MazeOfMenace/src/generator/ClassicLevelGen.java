@@ -1,62 +1,42 @@
-/*******************************************************************************
- * Copyright (c) 2012, 2013 Matthew Gruda
- * 
- * This file is part of Maze Of Menace.
- * 
- * Maze Of Menace is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Maze Of Menace is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- * 
- * Contributors:
- * Matthew Gruda- initial API and implementation
- ******************************************************************************/
 package generator;
 
 import java.util.Random;
+import dungeon.Dungeon;
 import dungeon.Level;
 import dungeon.tile.Tile;
 import dungeon.tile.TileTemplate;
 import dungeon.tile.template.StairDownTmpl;
 import dungeon.tile.template.StairUpTmpl;
 
-/**
- * class makes randomly generated levels as there is no need at present to make
- * an object, all methods will be static and class wil be final
- * 
- * @author Matthew Gruda
- */
-public final class GenerateLevel{
+public class ClassicLevelGen implements LevelGenStrategy{
 
-	private static int xSt, ySt;
+	private static final int xsz = 64, ysz = 32;
 
-	private static Random r = new Random();
+	private static int xup, yup, xd, yd;
 
-	/**
-	 * this is the main function for making a random level object only level
-	 * constructor should call this
-	 * 
-	 * @param lvl
-	 *            the level obj to operate on
-	 * @return level the generated level object
-	 */
-	public static Level generateLevel( Level lvl ){
-
+	@Override
+	public Level form_dungeon( Dungeon dgn, int depth ){
+		TileTemplate[][] lvl = new TileTemplate[xsz][ysz];
+		for(int x = 0; x < lvl.length; x++){
+			for(int y = 0; y < lvl[0].length; y++){
+				lvl[x][y] = TileTemplate.wall;
+			}
+		}
 		makeRooms(lvl);
 		makeCorridors(lvl);
 		makeStairs(lvl);
 		mkFountains(lvl);
-		return lvl;
+		Level l = new Level(depth, dgn, lvl);
+		l.setUpStrX(xup);
+		l.setUpStrY(yup);
+		l.setDwStrX(xd);
+		l.setDwStrY(yd);
+		return l;
 	}
+
+	private static int xSt, ySt;
+
+	private static Random r = new Random();
 
 	/**
 	 * makes randomly spaced & sized rooms this method only determines where to
@@ -65,7 +45,7 @@ public final class GenerateLevel{
 	 * @param lvl
 	 *            the level to operate on
 	 */
-	private static void makeRooms( Level lvl ){
+	private static void makeRooms( TileTemplate[][] lvl ){
 		// first make num rooms. will be 4-8 for now
 		int numRooms = r.nextInt(9) + 4;
 		// now randomly gen each room
@@ -94,7 +74,7 @@ public final class GenerateLevel{
 	 *            height
 	 */
 	private static void makeRoom(
-		Level lvl,
+		TileTemplate[][] lvl,
 		int x,
 		int y,
 		int xSize,
@@ -103,8 +83,7 @@ public final class GenerateLevel{
 		for(int i = x; i < xSize + x; i++){
 			for(int c = y; c < ySize + y; c++){
 				try{
-					lvl.getT(i, c)
-					.setTemp(TileTemplate.floor);
+					lvl[i][c] = TileTemplate.floor;
 				}catch(ArrayIndexOutOfBoundsException e){
 					// System.out.println(e);
 				}
@@ -118,7 +97,7 @@ public final class GenerateLevel{
 	 * @param lvl
 	 *            is the level to operate on
 	 */
-	private static void makeCorridors( Level lvl ){
+	private static void makeCorridors( TileTemplate[][] lvl ){
 		// gen num
 		int numCors = r.nextInt(18) + 9;
 		for(int i = 0; i < numCors; i++){
@@ -150,18 +129,21 @@ public final class GenerateLevel{
 	 *            coord of tile to test
 	 * @return direction if it is true, FALSE if cannot work
 	 */
-	private static CorridorPlace isValidCorPlace( Level lvl, int x, int y ){
-		if(lvl.getT(x, y) == null
-			|| lvl.getT(x, y).getTemp().can_walk()){
+	private static CorridorPlace isValidCorPlace(
+		TileTemplate[][] lvl,
+		int x,
+		int y ){
+		if(lvl[x][y] == null
+			|| lvl[x][y].can_walk()){
 			return CorridorPlace.FALSE;
 		}
-		if(lvl.getT(x + 1, y).getTemp().can_walk()){
+		if(lvl[x + 1][y].can_walk()){
 			return CorridorPlace.EAST;
-		}else if(lvl.getT(x - 1, y).getTemp().can_walk()){
+		}else if(lvl[x - 1][y].can_walk()){
 			return CorridorPlace.WEST;
-		}else if(lvl.getT(x, y + 1).getTemp().can_walk()){
+		}else if(lvl[x][y + 1].can_walk()){
 			return CorridorPlace.NORTH;
-		}else if(lvl.getT(x, y - 1).getTemp().can_walk()){
+		}else if(lvl[x][y - 1].can_walk()){
 			return CorridorPlace.SOUTH;
 		}
 		return CorridorPlace.FALSE;
@@ -179,28 +161,24 @@ public final class GenerateLevel{
 	 * @param length
 	 * @param direction
 	 */
-	private static void makeCorridor( Level lvl, int x, int y, int length,
+	private static void makeCorridor(
+		TileTemplate[][] lvl,
+		int x,
+		int y,
+		int length,
 		CorridorPlace direction ){
 		switch(direction){
 			case EAST:
 				for(int i = 0; i < length; i++){
 					if(x + i < 63){
-						lvl
-						.getT(x + i, y)
-							.setTemp(
-							TileTemplate.floor);
-						;
+						lvl[x + i][y] = TileTemplate.floor;
 					}
 				}
 				break;
 			case WEST:
 				for(int i = 0; i < length; i++){
 					if(x - i > 0){
-						lvl
-						.getT(x - i, y)
-							.setTemp(
-							TileTemplate.floor);
-						;
+						lvl[x - i][y] = TileTemplate.floor;
 
 					}
 				}
@@ -208,11 +186,7 @@ public final class GenerateLevel{
 			case NORTH:
 				for(int i = 0; i < length; i++){
 					if(y - i > 0){
-						lvl
-						.getT(x, y - i)
-							.setTemp(
-							TileTemplate.floor);
-						;
+						lvl[x][y - i] = TileTemplate.floor;
 
 					}
 
@@ -221,10 +195,8 @@ public final class GenerateLevel{
 			case SOUTH:
 				for(int i = 0; i < length; i++){
 					if(i + y < 31){
-						lvl
-						.getT(x, y + i)
-							.setTemp(
-							TileTemplate.floor);
+						lvl[x][y + i] = TileTemplate.floor;
+
 					}
 
 				}
@@ -238,7 +210,7 @@ public final class GenerateLevel{
 	 * 
 	 * @param lvl
 	 */
-	private static void makeStairs( Level lvl ){
+	private static void makeStairs( TileTemplate[][] lvl ){
 		makeUpStair(lvl);
 		detDwStairPlace(lvl);
 	}
@@ -248,62 +220,53 @@ public final class GenerateLevel{
 	 * 
 	 * @param lvl
 	 **/
-	private static void makeUpStair( Level lvl ){
+	private static void makeUpStair( TileTemplate[][] lvl ){
 		while(true){
 			xSt = r.nextInt(63) + 1;
 			ySt = r.nextInt(31) + 1;
-			if(lvl.getT(xSt, ySt).can_walk()){
+			if(lvl[xSt][ySt].can_walk()){
 				Tile to = null;
-				if(lvl.getDepth() != 0){
-					Level up = lvl.get_from().getLevel(
-						lvl.getDepth() - 1);
-					to = up.getT(
-						up.getDwStrX(),
-						up.getDwStrY());
-				}
-				lvl.getT(xSt, ySt).setTemp(new StairUpTmpl(to));
-				lvl.setUpStrX(xSt);
-				lvl.setUpStrY(ySt);
+				lvl[xSt][ySt] = new StairUpTmpl(null);
+				xup = xSt;
+				yup = ySt;
 				return;
 			}
 		}
 	}
 
-	private static void mkDwnStr( Level lvl ){
+	private static void mkDwnStr( TileTemplate[][] lvl ){
 		int x = 0, y = 0;
 		Tile at = null;
 		for(int i = 2000; i > 0; i--){
 			x = r.nextInt(63) + 1;
 			y = r.nextInt(31) + 1;
-			at = lvl.getT(x, y);
-			if(at.can_walk()
+			if(lvl[x][y].can_walk()
 				&&
-				at.getType() != StairUpTmpl.STAIRUP){
+				lvl[x][y].type() != StairUpTmpl.STAIRUP){
 				break;
 			}
 		}
-		at.setTemp(new StairDownTmpl());
-		lvl.setDwStrX(at.getX());
-		lvl.setDwStrY(at.getY());
+		lvl[x][y] = new StairDownTmpl();
+		xd = x;
+		yd = y;
 	}
 
-	private static void detDwStairPlace( Level lvl ){
-		int xLoc = lvl.getUpStrX(), yLoc = lvl.getUpStrY();
+	private static void detDwStairPlace( TileTemplate[][] lvl ){
+		int xLoc = xup, yLoc = yup;
 		int iters = r.nextInt(10) + 10;
-		Tile at = lvl.getT(xLoc, yLoc);
+		TileTemplate at = lvl[xLoc][yLoc];
 		outer: for(int i = 0; i < iters; i++){
 			CorridorPlace c = getDir(lvl, xLoc, yLoc);
 			int steps = r.nextInt(10) + 1;
-			Tile next = null;
 			switch(c){
 				case EAST:
-					next = at.east();
 					for(int z = 0; z < steps; z++){
 						if(bc(xLoc, yLoc) &&
-							next.can_walk() &&
-							next.getType() != StairUpTmpl.STAIRUP){
+							lvl[xLoc + 1][yLoc]
+								.can_walk() &&
+							lvl[xLoc + 1][yLoc]
+								.type() != StairUpTmpl.STAIRUP){
 							xLoc++;
-							at = next;
 						}else{
 							break;
 						}
@@ -312,39 +275,39 @@ public final class GenerateLevel{
 				case FALSE:
 					break outer;
 				case NORTH:
-					next = at.north();
 					for(int z = 0; z < steps; z++){
 						if(bc(xLoc, yLoc) &&
-							next.can_walk() &&
-							next.getType() != StairUpTmpl.STAIRUP){
+							lvl[xLoc][yLoc - 1]
+								.can_walk() &&
+							lvl[xLoc][yLoc - 1]
+								.type() != StairUpTmpl.STAIRUP){
 							yLoc--;
-							at = next;
 						}else{
 							break;
 						}
 					}
 					break;
 				case SOUTH:
-					next = at.south();
 					for(int z = 0; z < steps; z++){
 						if(bc(xLoc, yLoc) &&
-							next.can_walk() &&
-							next.getType() != StairUpTmpl.STAIRUP){
+							lvl[xLoc][yLoc + 1]
+								.can_walk() &&
+							lvl[xLoc][yLoc + 1]
+								.type() != StairUpTmpl.STAIRUP){
 							yLoc++;
-							at = next;
 						}else{
 							break;
 						}
 					}
 					break;
 				case WEST:
-					next = at.west();
 					for(int z = 0; z < steps; z++){
 						if(bc(xLoc, yLoc) &&
-							next.can_walk() &&
-							next.getType() != StairUpTmpl.STAIRUP){
+							lvl[xLoc - 1][yLoc]
+								.can_walk() &&
+							lvl[xLoc - 1][yLoc]
+								.type() != StairUpTmpl.STAIRUP){
 							xLoc--;
-							at = next;
 						}else{
 							break;
 						}
@@ -355,14 +318,14 @@ public final class GenerateLevel{
 
 			}
 		}
-		if(at.getType() == StairUpTmpl.STAIRUP){
+		if(lvl[xLoc][yLoc].type() == StairUpTmpl.STAIRUP){
 			mkDwnStr(lvl);
 			return;
 		}
 		int x = xLoc, y = yLoc;
-		at.setTemp(new StairDownTmpl());
-		lvl.setDwStrX(at.getX());
-		lvl.setDwStrY(at.getY());
+		lvl[x][y] = new StairDownTmpl();
+		xd = x;
+		yd = y;
 	}
 
 	private static boolean bc( int x, int y ){
@@ -374,34 +337,31 @@ public final class GenerateLevel{
 		return false;
 	}
 
-	private static CorridorPlace getDir( Level lvl, int x, int y ){
+	private static CorridorPlace
+	getDir( TileTemplate[][] lvl, int x, int y ){
 		for(int i = 0; i < 2000; i++){
 			switch(r.nextInt(4)){
 				case 0: // north
 					if(bc(x, y) &&
-						lvl.getT(x - 1, y)
-							.getTemp().can_walk()){
+						lvl[x - 1][y].can_walk()){
 						return CorridorPlace.NORTH;
 					}
 					break;
 				case 1:
 					if(bc(x, y) &&
-						lvl.getT(x + 1, y)
-							.getTemp().can_walk()){
+						lvl[x + 1][y].can_walk()){
 						return CorridorPlace.SOUTH;
 					}
 					break;
 				case 2:
 					if(bc(x, y) &&
-						lvl.getT(x, y - 1)
-							.getTemp().can_walk()){
+						lvl[x][y - 1].can_walk()){
 						return CorridorPlace.WEST;
 					}
 					break;
 				case 3:
 					if(bc(x, y) &&
-						lvl.getT(x, y + 1)
-							.getTemp().can_walk()){
+						lvl[x][y + 1].can_walk()){
 						return CorridorPlace.EAST;
 					}
 			}
@@ -409,15 +369,14 @@ public final class GenerateLevel{
 		return CorridorPlace.FALSE;
 	}
 
-	private static void mkFountains( Level lvl ){
+	private static void mkFountains( TileTemplate[][] lvl ){
 		int i = new Random().nextInt(4);
 		for(int c = 0; c < i; c++){
 			while(true){
 				int x = r.nextInt(63) + 1;
 				int y = r.nextInt(31) + 1;
-				if(lvl.getT(x, y).getTemp().can_walk()){
-					lvl.getT(x, y).setTemp(
-						TileTemplate.fountain);
+				if(lvl[x][y].can_walk()){
+					lvl[x][y] = TileTemplate.fountain;
 					break;
 				}
 			}

@@ -27,17 +27,25 @@ public class DDraw{
 		fty = ftm.getHeight();
 		g.setFont(fnt);
 		Level cur = dgn.getCurrentLevelObj();
-		Tile[][] lvl = cur.getlvl();
 		char[] cl = new char[1];
-		for(int i = 0; i < cur.getlvl().length; i++){
-			for(int j = 0; j < cur.getlvl()[0].length; j++){
-				Pair<Character, Color> c = lvl[i][j].getDcomp()
+		g.setColor(Color.black);
+		g.fillRect(0, 0, w.get_size().width, w.get_size().height);
+		for(int i = 0; i < cur.xlen(); i++){
+			for(int j = 0; j < cur.ylen(); j++){
+				Tile ct = cur.getT(i, j);
+				Pair<Character, Color> c = ct.getDcomp()
 					.getc();
+				if(ct.getCurrEntity() != null){
+					c = ct.getCurrEntity().getDraw().getc();
+				}
+
 				g.setColor(c.b);
 				cl[0] = c.a;
-				g.drawChars(cl, 0, 1, i * ftx, j * fty);
+				g.drawChars(cl, 0, 1, (3 + i) * ftx, (3 + j) *
+					fty);
 
 			}
 		}
+		g.drawString("" + cur.depth, 90 * ftx, 30);
 	}
 }

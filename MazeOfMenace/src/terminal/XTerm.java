@@ -45,11 +45,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import run.Init;
 import run.Settings;
-import run.Util;
-import run.input.GameState;
-import run.input.InputParse;
 
 /**
  * These are the classes for handling the window and graphics when running in a
@@ -62,7 +58,7 @@ import run.input.InputParse;
  * 
  * @author Matthew Gruda
  */
-public class XTerm extends Terminal{
+public class XTerm{
 
 	private static XTermRenderer winFrame;
 
@@ -130,7 +126,6 @@ public class XTerm extends Terminal{
 	 * starts up the terminal, creates and initalizes threads and various values
 	 * 
 	 */
-	@Override
 	public void enterPrivateMode(){
 		if(started){
 			return;
@@ -157,9 +152,7 @@ public class XTerm extends Terminal{
 	/**
 	 * ends the game, closing files and exits with 0
 	 */
-	@Override
 	public void exitPrivateMode(){
-		Util.closeStreams();
 		done = true;
 		try{
 			win.dispose();
@@ -173,7 +166,6 @@ public class XTerm extends Terminal{
 	}
 
 	public void exitPrivateMode( int exitCode ){
-		Util.closeStreams();
 		done = true;
 		win.dispose();
 		gl.stop();
@@ -187,7 +179,6 @@ public class XTerm extends Terminal{
 	 * @param c
 	 *            - char to draw
 	 */
-	@Override
 	public void putCharacter( char c ){
 		if(c != charArray[x][y]){
 			changed = true;
@@ -203,7 +194,6 @@ public class XTerm extends Terminal{
 	/**
 	 * adds a char, but with color
 	 */
-	@Override
 	public void putCharacter( char c, Color col ){
 		if(c != charArray[x][y]){
 			changed = true;
@@ -220,7 +210,6 @@ public class XTerm extends Terminal{
 	/**
 	 * moves the virtual "cursor"
 	 */
-	@Override
 	public void moveCursor( int xm, int ym ){
 		x = xm;
 		y = ym;
@@ -230,7 +219,6 @@ public class XTerm extends Terminal{
 		imageArray[x][y] = i;
 	}
 
-	@Override
 	public void clearScreen(){
 		for(int i = 0; i < 90; i++){
 			for(int c = 0; c < 40; c++){
@@ -258,7 +246,6 @@ public class XTerm extends Terminal{
 				if(arg0.getKeyCode() == KeyEvent.VK_END){
 					xterm.exitPrivateMode();
 				}
-				InputParse.inputParse(arg0);
 			}
 		}
 
@@ -367,16 +354,10 @@ public class XTerm extends Terminal{
 			while(!done){
 				try{
 					if(changed){
-						if(FancyImageBuffer.isFancyWanted
-							&&
-							Init.getState() == GameState.NORMAL){
-							FancyImageBuffer
-							.drawToIm(g2d);
-							partialClear();
-						}else{
-							g2d.setColor(Color.BLACK);
-							g2d.fillRect(0, 0, w, h);
-						}
+
+						g2d.setColor(Color.BLACK);
+						g2d.fillRect(0, 0, w, h);
+
 						graphicsUpdate();
 					}
 					Thread.sleep(35);

@@ -27,11 +27,10 @@ package dungeon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import run.Util;
-import terminal.FancyImageBuffer;
-import entity.player.Display;
 import entity.player.Player;
-import generator.GenerateLevel;
+import generator.ClassicLevelGen;
+import generator.GeneratePlayer;
+import generator.LevelGenStrategy;
 
 /**
  * @author Matthew Gruda will hold every level
@@ -45,9 +44,11 @@ public class Dungeon implements Serializable{
 
 	private ArrayList<Level> llist = new ArrayList<Level>();
 
-	private int currentLvl, maxLvl;
-
 	private Player player;
+
+	private int maxlvl = 0;
+
+	private LevelGenStrategy getstr = new ClassicLevelGen();
 
 	/**
 	 * set up moved to setUpDungeon() to avoid endless NPEs
@@ -59,73 +60,25 @@ public class Dungeon implements Serializable{
 	 * must be called to initalize dungon
 	 */
 	public void setUpDungeon(){
-		// everything starts at 0 :-)
-		maxLvl = 0;
 		makeNewLevel();
-		currentLvl = 0;
-		//		GeneratePlayer.generatePlayer(this, llist.get(0));
+		GeneratePlayer.generatePlayer(this, getLevel(0));
 	}
 
 	/**
 	 * makes a new level. calls generateLevel() for design and
 	 * generateStartMonster() for monsters
 	 */
-	private void makeNewLevel(){
-		Level n = new Level(maxLvl);
-
-		GenerateLevel.generateLevel(n);
+	public Level makeNewLevel(){
+		Level n = getstr.form_dungeon(this, maxlvl++);
 		llist.add(n);
-		//		GenerateMonster
-		//				.generateStartMonster(n);
-	}
-
-	/**
-	 * draws the current dungeon level calls draw() method in level
-	 */
-	public void draw(){
-		FancyImageBuffer.clearPics();
-		player.makeLOS();
-		llist.get(currentLvl).draw();
-		llist.get(currentLvl).drawf();
-		Display.display();
+		return n;
 	}
 
 	/**
 	 * @return the level that the player is currently on
 	 */
 	public Level getCurrentLevelObj(){
-		return llist.get(currentLvl);
-	}
-
-	/**
-	 * moves down one level. currentLvl changed and new level added if needed
-	 */
-	public void levelUp(){
-		currentLvl++;
-		if(currentLvl > maxLvl){
-			maxLvl++;
-			makeNewLevel();
-		}
-	}
-
-	/**
-	 * moves player up 1 level. call to kill() if level = -1
-	 * 
-	 * @return
-	 */
-	public boolean levelDown(){
-		currentLvl--;
-		if(currentLvl == -1){
-			if(!player.hasOrb()){
-				Util.kill(
-					"You escaped the dungeon\n(what a wimp)",
-					false);
-				return false;
-			}
-			Util.kill("dat/winMsg", true);
-			return false;
-		}
-		return true;
+		return player.getLOn();
 	}
 
 	/**
@@ -152,14 +105,5 @@ public class Dungeon implements Serializable{
 	 */
 	public Player getPlayer(){
 		return player;
-	}
-
-	/**
-	 * removes all instances of player in currEntitys
-	 */
-	public void purgePlayer(){
-		for(int i = 0; i < llist.size(); i++){
-			llist.get(i).purgePlayer();
-		}
 	}
 }

@@ -27,7 +27,8 @@ package generator;
 
 import dungeon.Dungeon;
 import dungeon.Level;
-import dungeon.tile.StairUp;
+import dungeon.tile.Tile;
+import entity.StatComponent;
 import entity.player.Player;
 
 /**
@@ -44,15 +45,8 @@ public final class GeneratePlayer{
 	 * make diffrent player classes: fighter, wizard, ect.
 	 */
 	public static void generatePlayer( Dungeon dgn, Level lvl ){
-		for(int x = 0; x < 64; x++){
-			for(int y = 0; y < 32; y++){
-				if(lvl.getlvl()[x][y].getBasetile() instanceof StairUp){
-					dgn
-					.setPlayer(new Player(x, y, 0));
-					return;
-				}
-			}
-		}
+		Tile t = lvl.getT(20, 20);
+		new Player(t, new StatComponent(0, 0, 0, 0, 0, 0, "Player"));
 		assert dgn.getPlayer() != null : "could not place player";
 	}
 }

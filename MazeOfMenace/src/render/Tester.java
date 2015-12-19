@@ -4,13 +4,25 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import render.draw.DDraw;
+import render.draw.DrawMngr;
+import render.io.DgnInCtrl;
 import render.io.MMWindow;
-import run.Init;
+import run.MLoop;
 import dungeon.Dungeon;
 
 public class Tester{
 
 	public static void main( String args[] ){
+		MMWindow w = setup();
+		DDraw dd = new DDraw();
+		Dungeon d = new Dungeon();
+		d.setUpDungeon();
+		dd.draw(w, d);
+		w.swap();
+		MLoop.run(w, new DrawMngr(d), new DgnInCtrl(d));
+	}
+
+	private static MMWindow setup(){
 		MMWindow w = new MMWindow();
 		w.init();
 
@@ -24,12 +36,7 @@ public class Tester{
 		g.setFont(new Font("Monospaced", 0, 14));
 		g.drawString("Loading", 600f, 350f);
 		w.swap();
-		DDraw dd = new DDraw();
-		Dungeon d = new Dungeon();
-		Init.dgn = d;
-		d.setUpDungeon();
-		dd.draw(w, d);
-		w.swap();
+		return w;
 	}
 
 }
