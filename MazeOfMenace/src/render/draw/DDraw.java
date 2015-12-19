@@ -26,7 +26,7 @@ public class DDraw{
 		ftx = ftm.charWidth(' ');
 		fty = ftm.getHeight();
 		g.setFont(fnt);
-		Level cur = dgn.getCurrentLevelObj();
+		Level cur = dgn.get_cur_lvl();
 		char[] cl = new char[1];
 		g.setColor(Color.black);
 		g.fillRect(0, 0, w.get_size().width, w.get_size().height);
@@ -46,6 +46,6 @@ public class DDraw{
 
 			}
 		}
-		g.drawString("" + cur.depth, 90 * ftx, 30);
+		g.drawString("" + cur.getDepth(), 90 * ftx, 30);
 	}
 }

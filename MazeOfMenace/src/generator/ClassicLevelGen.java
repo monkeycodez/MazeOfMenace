@@ -14,6 +14,8 @@ public class ClassicLevelGen implements LevelGenStrategy{
 
 	private static int xup, yup, xd, yd;
 
+	private static Tile prev;
+
 	@Override
 	public Level form_dungeon( Dungeon dgn, int depth ){
 		TileTemplate[][] lvl = new TileTemplate[xsz][ysz];
@@ -22,15 +24,17 @@ public class ClassicLevelGen implements LevelGenStrategy{
 				lvl[x][y] = TileTemplate.wall;
 			}
 		}
+		if(depth != 0){
+			Level pr = dgn.get_cur_lvl();
+			prev = pr.get_connection("down_stair_1");
+		}
 		makeRooms(lvl);
 		makeCorridors(lvl);
 		makeStairs(lvl);
 		mkFountains(lvl);
 		Level l = new Level(depth, dgn, lvl);
-		l.setUpStrX(xup);
-		l.setUpStrY(yup);
-		l.setDwStrX(xd);
-		l.setDwStrY(yd);
+		l.set_connection(xup, yup, "up_stair_1");
+		l.set_connection(xd, yd, "down_stair_1");
 		return l;
 	}
 
@@ -226,7 +230,7 @@ public class ClassicLevelGen implements LevelGenStrategy{
 			ySt = r.nextInt(31) + 1;
 			if(lvl[xSt][ySt].can_walk()){
 				Tile to = null;
-				lvl[xSt][ySt] = new StairUpTmpl(null);
+				lvl[xSt][ySt] = new StairUpTmpl(prev);
 				xup = xSt;
 				yup = ySt;
 				return;
@@ -264,8 +268,8 @@ public class ClassicLevelGen implements LevelGenStrategy{
 						if(bc(xLoc, yLoc) &&
 							lvl[xLoc + 1][yLoc]
 								.can_walk() &&
-							lvl[xLoc + 1][yLoc]
-								.type() != StairUpTmpl.STAIRUP){
+								lvl[xLoc + 1][yLoc]
+									.type() != StairUpTmpl.STAIRUP){
 							xLoc++;
 						}else{
 							break;
@@ -279,8 +283,8 @@ public class ClassicLevelGen implements LevelGenStrategy{
 						if(bc(xLoc, yLoc) &&
 							lvl[xLoc][yLoc - 1]
 								.can_walk() &&
-							lvl[xLoc][yLoc - 1]
-								.type() != StairUpTmpl.STAIRUP){
+								lvl[xLoc][yLoc - 1]
+									.type() != StairUpTmpl.STAIRUP){
 							yLoc--;
 						}else{
 							break;
@@ -292,8 +296,8 @@ public class ClassicLevelGen implements LevelGenStrategy{
 						if(bc(xLoc, yLoc) &&
 							lvl[xLoc][yLoc + 1]
 								.can_walk() &&
-							lvl[xLoc][yLoc + 1]
-								.type() != StairUpTmpl.STAIRUP){
+								lvl[xLoc][yLoc + 1]
+									.type() != StairUpTmpl.STAIRUP){
 							yLoc++;
 						}else{
 							break;
@@ -305,8 +309,8 @@ public class ClassicLevelGen implements LevelGenStrategy{
 						if(bc(xLoc, yLoc) &&
 							lvl[xLoc - 1][yLoc]
 								.can_walk() &&
-							lvl[xLoc - 1][yLoc]
-								.type() != StairUpTmpl.STAIRUP){
+								lvl[xLoc - 1][yLoc]
+									.type() != StairUpTmpl.STAIRUP){
 							xLoc--;
 						}else{
 							break;
@@ -338,7 +342,7 @@ public class ClassicLevelGen implements LevelGenStrategy{
 	}
 
 	private static CorridorPlace
-	getDir( TileTemplate[][] lvl, int x, int y ){
+		getDir( TileTemplate[][] lvl, int x, int y ){
 		for(int i = 0; i < 2000; i++){
 			switch(r.nextInt(4)){
 				case 0: // north

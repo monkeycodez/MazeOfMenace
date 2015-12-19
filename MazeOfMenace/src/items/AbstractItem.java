@@ -22,10 +22,7 @@
  ******************************************************************************/
 package items;
 
-
 public abstract class AbstractItem{
-
-	private static final long serialVersionUID = 1L;
 
 	public AbstractItem() {
 	}

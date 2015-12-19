@@ -25,7 +25,6 @@
  */
 package entity;
 
-import java.io.Serializable;
 import render.draw.DrawComponent;
 import dungeon.Level;
 import dungeon.tile.Tile;
@@ -36,24 +35,24 @@ import dungeon.tile.Tile;
  * @author matthew
  * 
  */
-public abstract class Entity implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public abstract class Entity{
 
 	private StatComponent stat = null;
 
 	private DrawComponent draw = null;
 
+	private Updateable update;
+
 	private Tile at;
 
-	public Entity(Tile t, StatComponent stat, DrawComponent d) {
-		this.stat = stat;
+	public Entity(Tile t, StatComponent stat, DrawComponent d,
+		Updateable ups) {
+		setStat(stat);
 		at = t;
 		at.set_e_at(this);
 		draw = d;
+		update = ups;
+		at.getLat().add_updateable(update);
 	}
 
 	public DrawComponent getDraw(){
@@ -79,50 +78,32 @@ public abstract class Entity implements Serializable{
 		if(!can_move(to)){
 			return false;
 		}
+		if(at.getLat().getDepth() != to.getLat().getDepth()){
+			at.getLat().remove_updateable(update);
+			to.getLat().add_updateable(update);
+		}
 		at.set_e_at(null);
 		to.set_e_at(this);
 		at = to;
 		return true;
 	}
 
-	public int getDefense(){
-		return stat.getDefense();
+	public Updateable getUpdate(){
+		return update;
 	}
 
-	public void setDefense( int defense ){
-		stat.setDefense(defense);
+	public void setUpdate( Updateable update ){
+		at.getLat().remove_updateable(this.update);
+		this.update = update;
+		at.getLat().add_updateable(update);
 	}
 
-	public int getAttack(){
-		return stat.getAttack();
+	public StatComponent getStat(){
+		return stat;
 	}
 
-	public void setAttack( int attack ){
-		stat.setAttack(attack);
-	}
-
-	public int getHitchance(){
-		return stat.getHitchance();
-	}
-
-	public void setHitchance( int hitchance ){
-		stat.setHitchance(hitchance);
-	}
-
-	public int getHp(){
-		return stat.getHp();
-	}
-
-	public void setHp( int hp ){
-		stat.setHp(hp);
-	}
-
-	public int getHpmax(){
-		return stat.getHpmax();
-	}
-
-	public void setHpmax( int hpmax ){
-		stat.setHpmax(hpmax);
+	public void setStat( StatComponent stat ){
+		this.stat = stat;
 	}
 
 }

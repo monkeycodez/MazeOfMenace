@@ -23,7 +23,6 @@
 package entity.player;
 
 import java.awt.Color;
-import java.io.Serializable;
 import render.draw.FixedDrawComp;
 import dungeon.tile.Tile;
 import entity.Entity;
@@ -33,24 +32,27 @@ import entity.StatComponent;
  * @author matthew
  * 
  */
-public class Player extends Entity implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class Player extends Entity{
 
 	private int regenCounter = 0;
 
 	private final int regenTgt = 3;
 
+	private PlayerUpdateable pup = new PlayerUpdateable();
+
 	public Player(Tile t, StatComponent stat) {
-		super(t, stat, new FixedDrawComp('@', Color.BLUE));
+		super(t, stat, new FixedDrawComp('@', Color.BLUE),
+			null);
+		super.setUpdate(pup);
 		t.getLat().get_from().setPlayer(this);
 	}
 
 	public void regenControl(){
 		regenCounter++;
+		StatComponent st = super.getStat();
 		if(regenCounter > regenTgt){
-			if(getHp() < getHpmax()){
-				super.setHp(super.getHp() + 1);
+			if(st.getHp() < st.getHpmax()){
+				st.setHp(st.getHp() + 1);
 			}
 			regenCounter = 0;
 		}
@@ -58,6 +60,10 @@ public class Player extends Entity implements Serializable{
 
 	public String getName(){
 		return "you";
+	}
+
+	public PlayerUpdateable get_p_up(){
+		return pup;
 	}
 
 }

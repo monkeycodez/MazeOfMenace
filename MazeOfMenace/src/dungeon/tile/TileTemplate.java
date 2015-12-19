@@ -11,6 +11,12 @@ public interface TileTemplate{
 
 	public boolean can_walk();
 
+	public boolean is_solid();
+
+	public default boolean is_water(){
+		return false;
+	}
+
 	public int type();
 
 	default public TileInteract create_new_interaction( Tile to ){
@@ -35,8 +41,12 @@ public interface TileTemplate{
 
 		@Override
 		public int type(){
-			// TODO Auto-generated method stub
 			return 1;
+		}
+
+		@Override
+		public boolean is_solid(){
+			return false;
 		}
 	};
 
@@ -58,8 +68,12 @@ public interface TileTemplate{
 
 		@Override
 		public int type(){
-			// TODO Auto-generated method stub
 			return 3;
+		}
+
+		@Override
+		public boolean is_solid(){
+			return true;
 		}
 	};
 
@@ -81,8 +95,12 @@ public interface TileTemplate{
 
 		@Override
 		public int type(){
-			// TODO Auto-generated method stub
 			return 2;
+		}
+
+		@Override
+		public boolean is_solid(){
+			return false;
 		}
 	};
 

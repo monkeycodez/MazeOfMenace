@@ -25,34 +25,35 @@
  */
 package dungeon;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import dungeon.tile.Tile;
 import dungeon.tile.TileTemplate;
-import entity.mons.GeneralMonster;
+import entity.Updateable;
 
 /**
  * @author Matthew Gruda will hold each individual level
  */
 
-public class Level implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class Level{
 
 	private Dungeon from;
 
-	private Tile[][] lvl = new Tile[64][32];
+	private Tile[][] lvl;
 
-	public final ArrayList<GeneralMonster> monsters =
-		new ArrayList<GeneralMonster>(0);
+	private final List<Updateable> ents =
+		new ArrayList<>(0);
 
-	public final int depth;
+	private final int depth;
 
-	private int upStrX, upStrY, dwStrX, dwStrY;
+	private Map<String, Tile> connections;
 
 	public Level(int depth, Dungeon from, TileTemplate[][] map) {
 		this.depth = depth;
 		this.from = from;
+		connections = new HashMap<>();
 		lvl = new Tile[map.length][map[0].length];
 		for(int x = 0; x < map.length; x++){
 			for(int y = 0; y < map[0].length; y++){
@@ -75,71 +76,19 @@ public class Level implements Serializable{
 		return from;
 	}
 
+	public void set_connection( int x, int y, String name ){
+		connections.put(name, getT(x, y));
+	}
+
+	public Tile get_connection( String name ){
+		return connections.get(name);
+	}
+
 	/**
-		 * @return the depth
-		 */
+	 * @return the depth
+	 */
 	public int getDepth(){
 		return depth;
-	}
-
-	/**
-	 * @return the upStrX
-	 */
-	public int getUpStrX(){
-		return upStrX;
-	}
-
-	/**
-	 * @param upStrX
-	 *            the upStrX to set
-	 */
-	public void setUpStrX( int upStrX ){
-		this.upStrX = upStrX;
-	}
-
-	/**
-	 * @return the upStrY
-	 */
-	public int getUpStrY(){
-		return upStrY;
-	}
-
-	/**
-	 * @param upStrY
-	 *            the upStrY to set
-	 */
-	public void setUpStrY( int upStrY ){
-		this.upStrY = upStrY;
-	}
-
-	/**
-	 * @return the dwStrX
-	 */
-	public int getDwStrX(){
-		return dwStrX;
-	}
-
-	/**
-	 * @param dwStrX
-	 *            the dwStrX to set
-	 */
-	public void setDwStrX( int dwStrX ){
-		this.dwStrX = dwStrX;
-	}
-
-	/**
-	 * @return the dwStrY
-	 */
-	public int getDwStrY(){
-		return dwStrY;
-	}
-
-	/**
-	 * @param dwStrY
-	 *            the dwStrY to set
-	 */
-	public void setDwStrY( int dwStrY ){
-		this.dwStrY = dwStrY;
 	}
 
 	public int xlen(){
@@ -148,5 +97,19 @@ public class Level implements Serializable{
 
 	public int ylen(){
 		return lvl[0].length;
+	}
+
+	public void add_updateable( Updateable up ){
+		if(up != null){
+			ents.add(up);
+		}
+	}
+
+	public void remove_updateable( Updateable up ){
+		ents.remove(up);
+	}
+
+	public List<Updateable> get_updates(){
+		return ents;
 	}
 }

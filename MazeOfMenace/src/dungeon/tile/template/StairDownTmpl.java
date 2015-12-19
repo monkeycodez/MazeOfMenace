@@ -51,9 +51,13 @@ public class StairDownTmpl implements TileTemplate{
 				return;
 			}
 			Level n = e.getLOn().get_from().makeNewLevel();
-			Tile t = n.getT(n.getUpStrX(), n.getUpStrY());
-			e.move(t);
-			nlvl = t;
+			nlvl = n.get_connection("up_stair_1");
+			e.move(nlvl);
 		}
+	}
+
+	@Override
+	public boolean is_solid(){
+		return false;
 	}
 }

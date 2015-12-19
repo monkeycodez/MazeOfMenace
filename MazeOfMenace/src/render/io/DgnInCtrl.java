@@ -2,7 +2,9 @@ package render.io;
 
 import java.awt.event.KeyEvent;
 import dungeon.Dungeon;
+import entity.EAction;
 import entity.player.Player;
+import entity.player.PlayerUpdateable;
 
 public class DgnInCtrl implements InputControl{
 
@@ -19,21 +21,26 @@ public class DgnInCtrl implements InputControl{
 			return;
 		}
 		Player p = dgn.getPlayer();
+		PlayerUpdateable pup = p.get_p_up();
 		switch(k.getKeyCode()){
 			case KeyEvent.VK_UP:
-				p.move(p.getLoc().north());
+				pup.register_next_move(EAction.move_to(p,
+					p.getLoc().north()));
 				break;
 			case KeyEvent.VK_DOWN:
-				p.move(p.getLoc().south());
+				pup.register_next_move(EAction.move_to(p,
+					p.getLoc().south()));
 				break;
 			case KeyEvent.VK_LEFT:
-				p.move(p.getLoc().west());
+				pup.register_next_move(EAction.move_to(p,
+					p.getLoc().west()));
 				break;
 			case KeyEvent.VK_RIGHT:
-				p.move(p.getLoc().east());
+				pup.register_next_move(EAction.move_to(p,
+					p.getLoc().east()));
 				break;
 			case KeyEvent.VK_E:
-				p.getLoc().getInteract().interact(p);
+				pup.register_next_move(EAction.interact_on(p));
 				break;
 
 		}

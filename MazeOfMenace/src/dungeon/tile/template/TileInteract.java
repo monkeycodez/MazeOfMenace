@@ -28,7 +28,6 @@ public interface TileInteract{
 		@Override
 		public void interact( Entity e ){
 			//TODO: change to real interaction
-			e.setHp(10);
 		}
 	};
 

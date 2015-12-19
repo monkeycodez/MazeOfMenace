@@ -17,80 +17,49 @@ import json.parser.JSONParser;
 
 public class Settings{
 
-	private static String fnt;
-
-	private static boolean gl, ft, tls;
-
-	private static int fps, fsz, glX, glY, glp, gle;
-
-	public static String getFnt(){
-		return fnt;
-	}
-
-	public static boolean isGl(){
-		return gl;
-	}
-
-	public static boolean isFt(){
-		return ft;
-	}
-
-	public static boolean isTls(){
-		return tls;
-	}
-
-	public static int getFps(){
-		return fps;
-	}
-
-	public static int getFsz(){
-		return fsz;
-	}
+	private static JSONObj settings;
 
 	public static void initSettings(){
 		JSONObj j = null;
 		try{
 			j = JSONParser.parse_from_path("config/config.json");
+			settings = j;
 		}catch(JSONParseException | IOException e){
 			e.printStackTrace();
 			return;
 		}
-		fps = j.geti("fps");
-		fnt = j.gets("font.name");
-		fsz = j.geti("font.size");
-		glX = j.geti("gl.x");
-		glY = j.geti("gl.y");
-		glp = j.geti("gl.ipause");
-		gle = j.geti("gl.ep");
-		switch(j.gets("disp")){
-			case "term":
-				break;
-			case "GL":
-				gl = true;
-			case "ftiles":
-				ft = true;
-			case "btiles":
-				tls = true;
-		}
 	}
 
-	private Settings() {
+	public static boolean getb( String key, boolean def ){
+		return settings.getb(key, def);
 	}
 
-	public static int getGlY(){
-		return glY;
+	public static boolean getb( String key ){
+		return settings.getb(key);
 	}
 
-	public static int getGlX(){
-		return glX;
+	public static double getd( String key, double def ){
+		return settings.getd(key, def);
 	}
 
-	public static int getGlp(){
-		return glp;
+	public static double getd( String key ){
+		return settings.getd(key);
 	}
 
-	public static int getGle(){
-		return gle;
+	public static int geti( String key, int def ){
+		return settings.geti(key, def);
+	}
+
+	public static int geti( String key ){
+		return settings.geti(key);
+	}
+
+	public static String gets( String key, String def ){
+		return settings.gets(key, def);
+	}
+
+	public static String gets( String key ){
+		return settings.gets(key);
 	}
 
 }

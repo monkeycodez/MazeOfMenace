@@ -25,20 +25,21 @@
  */
 package entity.mons;
 
-import java.io.Serializable;
+import render.draw.DrawComponent;
 import dungeon.tile.Tile;
 import entity.Entity;
+import entity.StatComponent;
+import entity.Updateable;
 
 /**
  * @author Matthew Gruda
  * 
  */
-public class GeneralMonster extends Entity implements Serializable{
+public class GeneralMonster extends Entity{
 
-	public GeneralMonster(Tile t, MonsTemplate from) {
-		super(t, from.getStats(), from.getDraw());
+	public GeneralMonster(Tile t, StatComponent stat, DrawComponent d,
+		Updateable ups) {
+		super(t, stat, d, ups);
 	}
-
-	private static final long serialVersionUID = 1L;
 
 }

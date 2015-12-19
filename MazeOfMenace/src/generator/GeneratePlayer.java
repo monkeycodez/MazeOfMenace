@@ -45,7 +45,7 @@ public final class GeneratePlayer{
 	 * make diffrent player classes: fighter, wizard, ect.
 	 */
 	public static void generatePlayer( Dungeon dgn, Level lvl ){
-		Tile t = lvl.getT(20, 20);
+		Tile t = lvl.get_connection("up_stair_1");
 		new Player(t, new StatComponent(0, 0, 0, 0, 0, 0, "Player"));
 		assert dgn.getPlayer() != null : "could not place player";
 	}

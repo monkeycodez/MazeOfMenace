@@ -7,6 +7,7 @@ import render.draw.DDraw;
 import render.draw.DrawMngr;
 import render.io.DgnInCtrl;
 import render.io.MMWindow;
+import run.DgnUpdater;
 import run.MLoop;
 import dungeon.Dungeon;
 
@@ -19,7 +20,8 @@ public class Tester{
 		d.setUpDungeon();
 		dd.draw(w, d);
 		w.swap();
-		MLoop.run(w, new DrawMngr(d), new DgnInCtrl(d));
+		MLoop.run(w, new DrawMngr(d), new DgnInCtrl(d), new DgnUpdater(
+			d));
 	}
 
 	private static MMWindow setup(){

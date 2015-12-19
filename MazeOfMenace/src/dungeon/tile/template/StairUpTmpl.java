@@ -48,7 +48,11 @@ public class StairUpTmpl implements TileTemplate{
 
 	@Override
 	public int type(){
-		// TODO Auto-generated method stub
 		return 5;
+	}
+
+	@Override
+	public boolean is_solid(){
+		return false;
 	}
 }

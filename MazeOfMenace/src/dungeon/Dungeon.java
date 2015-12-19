@@ -25,7 +25,6 @@
  */
 package dungeon;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import entity.player.Player;
 import generator.ClassicLevelGen;
@@ -35,12 +34,7 @@ import generator.LevelGenStrategy;
 /**
  * @author Matthew Gruda will hold every level
  */
-public class Dungeon implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Dungeon{
 
 	private ArrayList<Level> llist = new ArrayList<Level>();
 
@@ -77,7 +71,7 @@ public class Dungeon implements Serializable{
 	/**
 	 * @return the level that the player is currently on
 	 */
-	public Level getCurrentLevelObj(){
+	public Level get_cur_lvl(){
 		return player.getLOn();
 	}
 
