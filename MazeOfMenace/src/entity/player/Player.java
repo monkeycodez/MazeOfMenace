@@ -34,32 +34,13 @@ import entity.StatComponent;
  */
 public class Player extends Entity{
 
-	private int regenCounter = 0;
-
-	private final int regenTgt = 3;
-
-	private PlayerUpdateable pup = new PlayerUpdateable();
+	private PlayerUpdateable pup = new PlayerUpdateable(this);
 
 	public Player(Tile t, StatComponent stat) {
 		super(t, stat, new FixedDrawComp('@', Color.BLUE),
 			null);
 		super.setUpdate(pup);
 		t.getLat().get_from().setPlayer(this);
-	}
-
-	public void regenControl(){
-		regenCounter++;
-		StatComponent st = super.getStat();
-		if(regenCounter > regenTgt){
-			if(st.getHp() < st.getHpmax()){
-				st.setHp(st.getHp() + 1);
-			}
-			regenCounter = 0;
-		}
-	}
-
-	public String getName(){
-		return "you";
 	}
 
 	public PlayerUpdateable get_p_up(){

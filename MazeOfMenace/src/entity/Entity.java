@@ -67,20 +67,14 @@ public abstract class Entity{
 		return at.getLat();
 	}
 
-	public boolean can_move( Tile t ){
-		if(t == null){
-			return false;
-		}
-		return true;
-	}
-
 	public boolean move( Tile to ){
-		if(!can_move(to)){
+		if(to == null){
 			return false;
 		}
 		if(at.getLat().getDepth() != to.getLat().getDepth()){
 			at.getLat().remove_updateable(update);
 			to.getLat().add_updateable(update);
+			//TODO post lvl change update
 		}
 		at.set_e_at(null);
 		to.set_e_at(this);
@@ -104,6 +98,76 @@ public abstract class Entity{
 
 	public void setStat( StatComponent stat ){
 		this.stat = stat;
+	}
+
+	public boolean can_move_north(){
+		Tile north = at.north();
+		if(north == null){
+			return false;
+		}
+
+		if(north.is_solid()){
+			return false;
+		}
+		if(north.can_walk() && stat.can_walk){
+			return true;
+		}
+		if(north.is_water() && stat.can_swim){
+			return true;
+		}
+		return false;
+	}
+
+	public boolean can_move_west(){
+		Tile west = at.west();
+		if(west == null){
+			return false;
+		}
+		if(west.is_solid()){
+			return false;
+		}
+		if(west.can_walk() && stat.can_walk){
+			return true;
+		}
+		if(west.is_water() && stat.can_swim){
+			return true;
+		}
+		return false;
+	}
+
+	public boolean can_move_east(){
+		Tile east = at.east();
+		if(east == null){
+			return false;
+		}
+
+		if(east.is_solid()){
+			return false;
+		}
+		if(east.can_walk() && stat.can_walk){
+			return true;
+		}
+		if(east.is_water() && stat.can_swim){
+			return true;
+		}
+		return false;
+	}
+
+	public boolean can_move_south(){
+		Tile south = at.south();
+		if(south == null){
+			return false;
+		}
+		if(south.is_solid()){
+			return false;
+		}
+		if(south.can_walk() && stat.can_walk){
+			return true;
+		}
+		if(south.is_water() && stat.can_swim){
+			return true;
+		}
+		return false;
 	}
 
 }

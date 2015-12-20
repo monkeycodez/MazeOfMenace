@@ -1,12 +1,14 @@
 package entity;
 
-public class StatComponent{
+public class StatComponent implements Cloneable{
 
 	private int attack;
 
 	private int hitchance, hp, hpmax, defense, speed;
 
 	private String name;
+
+	public boolean can_walk = true, can_swim, can_fly;
 
 	public StatComponent(int attack, int hitchance, int hp, int hpmax,
 		int defense, int speed, String name) {

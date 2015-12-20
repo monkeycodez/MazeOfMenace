@@ -20,6 +20,7 @@ public interface EAction{
 			public int get_base_cost(){
 				return 100;
 			}
+
 		};
 	}
 
@@ -35,6 +36,7 @@ public interface EAction{
 			public void do_action(){
 				e.getLoc().getInteract().interact(e);
 			}
+
 		};
 	}
 

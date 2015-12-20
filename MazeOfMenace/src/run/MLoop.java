@@ -1,22 +1,24 @@
 package run;
 
-import render.draw.DrawMngr;
-import render.io.InputControl;
 import render.io.MMWindow;
+import run.gamestate.DrawControl;
+import run.gamestate.InputControl;
+import run.gamestate.UpdateControl;
 
 public class MLoop{
 
 	public static InputControl cont;
 
-	public static DrawMngr draw;
+	public static DrawControl draw;
 
 	public static UpdateControl update;
 
 	public static void run(
 		MMWindow win,
-		DrawMngr dm,
+		DrawControl dm,
 		InputControl c,
 		UpdateControl upd ){
+
 		draw = dm;
 		cont = c;
 		update = upd;
@@ -31,7 +33,7 @@ public class MLoop{
 			draw.draw(win);
 			ms = System.currentTimeMillis() - ms;
 			try{
-				Thread.sleep(1000 / 30);
+				Thread.sleep(100 / 3 - ms);
 			}catch(InterruptedException e){
 				e.printStackTrace();
 			}

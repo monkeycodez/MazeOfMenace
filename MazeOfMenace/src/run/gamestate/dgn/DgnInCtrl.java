@@ -1,6 +1,8 @@
-package render.io;
+package run.gamestate.dgn;
 
 import java.awt.event.KeyEvent;
+import render.io.MMWindow;
+import run.gamestate.InputControl;
 import dungeon.Dungeon;
 import entity.EAction;
 import entity.player.Player;

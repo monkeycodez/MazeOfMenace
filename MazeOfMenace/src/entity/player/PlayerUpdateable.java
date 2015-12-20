@@ -7,6 +7,12 @@ public class PlayerUpdateable implements Updateable{
 
 	private int cooldown;
 
+	private Player pl;
+
+	public PlayerUpdateable(Player p) {
+		pl = p;
+	}
+
 	@Override
 	public boolean update(){
 		if(next == null){
@@ -14,7 +20,8 @@ public class PlayerUpdateable implements Updateable{
 		}
 		EAction move = next;
 		move.do_action();
-		cooldown -= move.get_base_cost();
+		cooldown += move.get_base_cost();
+		next = null;
 		return true;
 	}
 
@@ -24,12 +31,20 @@ public class PlayerUpdateable implements Updateable{
 		next = e;
 	}
 
-	public int getCooldown(){
+	@Override
+	public void reduce_cooldown( int time ){
+		cooldown -= time;
+	}
+
+	@Override
+	public int get_cooldown(){
 		return cooldown;
 	}
 
-	public void incCooldown( int cooldown ){
-		this.cooldown += cooldown;
+	@Override
+	public int get_speed(){
+		//TODO: redo when stat overhaul occurs
+		return pl.getStat().getSpeed();
 	}
 
 }

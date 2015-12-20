@@ -1,19 +1,22 @@
-package render.draw;
+package run.gamestate.dgn;
 
+import render.draw.DDraw;
 import render.io.MMWindow;
+import run.gamestate.DrawControl;
 import dungeon.Dungeon;
 
-public class DrawMngr{
+public class DgnDrawMngr implements DrawControl{
 
 	private Dungeon dgn;
 
 	private DDraw d;
 
-	public DrawMngr(Dungeon dgn) {
+	public DgnDrawMngr(Dungeon dgn) {
 		this.dgn = dgn;
 		d = new DDraw();
 	}
 
+	@Override
 	public void draw( MMWindow win ){
 		d.draw(win, dgn);
 		win.swap();

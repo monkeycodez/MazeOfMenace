@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import render.draw.DDraw;
-import render.draw.DrawMngr;
-import render.io.DgnInCtrl;
 import render.io.MMWindow;
-import run.DgnUpdater;
 import run.MLoop;
+import run.gamestate.dgn.DgnDrawMngr;
+import run.gamestate.dgn.DgnInCtrl;
+import run.gamestate.dgn.DgnUpdater;
 import dungeon.Dungeon;
 
 public class Tester{
@@ -20,7 +20,7 @@ public class Tester{
 		d.setUpDungeon();
 		dd.draw(w, d);
 		w.swap();
-		MLoop.run(w, new DrawMngr(d), new DgnInCtrl(d), new DgnUpdater(
+		MLoop.run(w, new DgnDrawMngr(d), new DgnInCtrl(d), new DgnUpdater(
 			d));
 	}
 

@@ -1,4 +1,4 @@
-package run;
+package run.gamestate;
 
 public interface UpdateControl{
 

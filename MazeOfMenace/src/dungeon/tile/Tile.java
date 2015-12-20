@@ -23,7 +23,6 @@
 package dungeon.tile;
 
 import items.AbstractItem;
-import java.io.Serializable;
 import java.util.LinkedList;
 import render.draw.DrawComponent;
 import dungeon.Level;
@@ -41,7 +40,7 @@ import entity.Entity;
  * @author matthew
  * 
  */
-public class Tile implements Serializable{
+public class Tile{
 
 	private DrawComponent dr;
 
@@ -61,15 +60,6 @@ public class Tile implements Serializable{
 
 	private TileTemplate from;
 
-	//OLD STUFF
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	private boolean seen, inView;
-
 	public boolean genFlag1;
 
 	public Tile(int x, int y, TileTemplate t, Level at) {
@@ -78,9 +68,6 @@ public class Tile implements Serializable{
 		inter = t.create_new_interaction(this);
 		this.x = x;
 		this.y = y;
-		seen = false;
-		inView = false;
-		genFlag1 = false;
 		this.at = at;
 	}
 
@@ -98,29 +85,16 @@ public class Tile implements Serializable{
 		return inter;
 	}
 
+	public boolean is_solid(){
+		return from.is_solid();
+	}
+
+	public boolean is_water(){
+		return from.is_water();
+	}
+
 	public int getType(){
 		return from.type();
-	}
-
-	/**
-	 * some setters & getters
-	 * 
-	 * @return
-	 */
-	public boolean isSeen(){
-		return seen;
-	}
-
-	public void setSeen( boolean seen ){
-		this.seen = seen;
-	}
-
-	public boolean isInView(){
-		return inView;
-	}
-
-	public void setInView( boolean inView ){
-		this.inView = inView;
 	}
 
 	public int getX(){
