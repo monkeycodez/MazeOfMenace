@@ -1,39 +1,36 @@
 package run;
 
-import render.io.MMWindow;
 import run.gamestate.DrawControl;
 import run.gamestate.InputControl;
 import run.gamestate.UpdateControl;
+import window.MMWindow;
 
 public class MLoop{
 
-	public static InputControl cont;
-
-	public static DrawControl draw;
-
-	public static UpdateControl update;
+	private static CtrlStateManager mgr;
 
 	public static void run(
 		MMWindow win,
-		DrawControl dm,
-		InputControl c,
-		UpdateControl upd ){
-
-		draw = dm;
-		cont = c;
-		update = upd;
+		CtrlStateManager mg ){
+		mgr = mg;
 		long ms = 0;
+		long wait = 0;
 		while(true){
 			if(win.is_close_requested()){
 				System.exit(0);
 			}
 			ms = System.currentTimeMillis();
-			cont.proccess_event(win);
-			update.update(ms);
-			draw.draw(win);
+			DrawControl dc = mgr.get_dc();
+			InputControl ic = mgr.get_ic();
+			UpdateControl uc = mgr.get_uc();
+			ic.proccess_event(win);
+			uc.update(ms);
+			dc.draw(win);
 			ms = System.currentTimeMillis() - ms;
+			wait = 100 / 3 - ms;
+			wait = wait < 0 ? 0 : wait;
 			try{
-				Thread.sleep(100 / 3 - ms);
+				Thread.sleep(wait);
 			}catch(InterruptedException e){
 				e.printStackTrace();
 			}

@@ -1,6 +1,6 @@
 package run.gamestate;
 
-import render.io.MMWindow;
+import window.MMWindow;
 
 
 public interface InputControl{

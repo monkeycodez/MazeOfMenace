@@ -1,8 +1,8 @@
 package run.gamestate.dgn;
 
 import render.draw.DDraw;
-import render.io.MMWindow;
 import run.gamestate.DrawControl;
+import window.MMWindow;
 import dungeon.Dungeon;
 
 public class DgnDrawMngr implements DrawControl{

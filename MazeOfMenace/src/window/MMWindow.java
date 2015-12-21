@@ -1,4 +1,4 @@
-package render.io;
+package window;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -49,6 +49,7 @@ public class MMWindow{
 					_init();
 				}
 			});
+			Thread.sleep(300);
 		}catch(InterruptedException | InvocationTargetException e){
 			e.printStackTrace();
 			return;
@@ -94,6 +95,9 @@ public class MMWindow{
 
 			@Override
 			public void keyPressed( KeyEvent e ){
+				if(e.getKeyCode() == KeyEvent.VK_END){
+					close = true;
+				}
 				laste = e;
 			}
 		});

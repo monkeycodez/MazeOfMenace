@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import render.io.MMWindow;
+import window.MMWindow;
 import dungeon.Dungeon;
 import dungeon.Level;
 import dungeon.Pair;
