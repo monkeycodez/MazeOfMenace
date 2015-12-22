@@ -81,6 +81,35 @@ public class Tile{
 		inter = t.create_new_interaction(this);
 	}
 
+	public boolean is_neighbor( Tile itr ){
+		if(itr == north()){
+			return true;
+		}
+		if(itr == east()){
+			return true;
+		}
+		if(itr == south()){
+			return true;
+		}
+		if(itr == west()){
+			return true;
+		}
+		if(itr == ne()){
+			return true;
+		}
+		if(itr == se()){
+			return true;
+		}
+		if(itr == nw()){
+			return true;
+		}
+		if(itr == sw()){
+			return true;
+		}
+
+		return false;
+	}
+
 	public TileInteract getInteract(){
 		return inter;
 	}
@@ -139,6 +168,22 @@ public class Tile{
 
 	public Tile west(){
 		return at.getT(x - 1, y);
+	}
+
+	public Tile ne(){
+		return at.getT(x + 1, y - 1);
+	}
+
+	public Tile nw(){
+		return at.getT(x - 1, y - 1);
+	}
+
+	public Tile sw(){
+		return at.getT(x - 1, y + 1);
+	}
+
+	public Tile se(){
+		return at.getT(x + 1, y + 1);
 	}
 
 }

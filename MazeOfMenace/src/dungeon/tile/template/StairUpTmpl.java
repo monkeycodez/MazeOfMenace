@@ -41,7 +41,7 @@ public class StairUpTmpl implements TileTemplate{
 
 	@Override
 	public boolean can_walk(){
-		return false;
+		return true;
 	}
 
 	public static final int STAIRUP = 5;

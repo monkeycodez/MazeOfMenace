@@ -8,12 +8,42 @@ public interface EAction{
 
 	public int get_base_cost();
 
+	public default boolean is_valid(){
+		return true;
+	}
+
 	public static EAction move_to( Entity e, Tile to ){
 		return new EAction(){
 
 			@Override
 			public void do_action(){
 				e.move(to);
+			}
+
+			@Override
+			public boolean is_valid(){
+				return e.can_go_on(to);
+			}
+
+			@Override
+			public int get_base_cost(){
+				return 100;
+			}
+
+		};
+	}
+
+	public static EAction walk_to( Entity e, Tile to ){
+		return new EAction(){
+
+			@Override
+			public void do_action(){
+				e.move(to);
+			}
+
+			@Override
+			public boolean is_valid(){
+				return e.can_walk_to(to);
 			}
 
 			@Override

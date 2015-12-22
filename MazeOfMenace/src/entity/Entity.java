@@ -27,6 +27,8 @@ package entity;
 
 import render.draw.DrawComponent;
 import dungeon.Level;
+import dungeon.event.DEvent;
+import dungeon.event.EventBus;
 import dungeon.tile.Tile;
 
 /**
@@ -74,7 +76,11 @@ public abstract class Entity{
 		if(at.getLat().getDepth() != to.getLat().getDepth()){
 			at.getLat().remove_updateable(update);
 			to.getLat().add_updateable(update);
-			//TODO post lvl change update
+			DEvent lchange = new DEvent("ENT_LVL_CHANGE");
+			lchange.setTfrom(at);
+			lchange.setAt(to);
+			lchange.setFrom(this);
+			EventBus.post_event(lchange);
 		}
 		at.set_e_at(null);
 		to.set_e_at(this);
@@ -100,71 +106,29 @@ public abstract class Entity{
 		this.stat = stat;
 	}
 
-	public boolean can_move_north(){
-		Tile north = at.north();
-		if(north == null){
+	public boolean can_walk_to( Tile to ){
+		if(!can_go_on(to)){
+			return false;
+		}
+		if(!at.is_neighbor(to)){
 			return false;
 		}
 
-		if(north.is_solid()){
-			return false;
-		}
-		if(north.can_walk() && stat.can_walk){
-			return true;
-		}
-		if(north.is_water() && stat.can_swim){
-			return true;
-		}
-		return false;
+		return true;
 	}
 
-	public boolean can_move_west(){
-		Tile west = at.west();
-		if(west == null){
-			return false;
-		}
-		if(west.is_solid()){
-			return false;
-		}
-		if(west.can_walk() && stat.can_walk){
-			return true;
-		}
-		if(west.is_water() && stat.can_swim){
-			return true;
-		}
-		return false;
-	}
-
-	public boolean can_move_east(){
-		Tile east = at.east();
-		if(east == null){
+	public boolean can_go_on( Tile to ){
+		if(to == null){
 			return false;
 		}
 
-		if(east.is_solid()){
+		if(to.is_solid()){
 			return false;
 		}
-		if(east.can_walk() && stat.can_walk){
+		if(to.can_walk() && stat.can_walk){
 			return true;
 		}
-		if(east.is_water() && stat.can_swim){
-			return true;
-		}
-		return false;
-	}
-
-	public boolean can_move_south(){
-		Tile south = at.south();
-		if(south == null){
-			return false;
-		}
-		if(south.is_solid()){
-			return false;
-		}
-		if(south.can_walk() && stat.can_walk){
-			return true;
-		}
-		if(south.is_water() && stat.can_swim){
+		if(to.is_water() && stat.can_swim){
 			return true;
 		}
 		return false;
