@@ -1,21 +1,10 @@
 package window;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 public class MMWindow{
 
@@ -42,13 +31,7 @@ public class MMWindow{
 		}
 		inited = true;
 		try{
-			SwingUtilities.invokeAndWait(new Runnable(){
-
-				@Override
-				public void run(){
-					_init();
-				}
-			});
+			SwingUtilities.invokeAndWait(( ) -> _init());
 			Thread.sleep(300);
 		}catch(InterruptedException | InvocationTargetException e){
 			e.printStackTrace();

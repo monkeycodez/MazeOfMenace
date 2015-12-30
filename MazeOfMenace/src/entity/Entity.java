@@ -27,12 +27,12 @@ package entity;
 
 import render.draw.DrawComponent;
 import dungeon.Level;
-import dungeon.event.DEvent;
-import dungeon.event.EventBus;
+import dungeon.event.*;
 import dungeon.tile.Tile;
 
 /**
- * monsters and player extend this provides basic movement with move()
+ * monsters and player extend this, provides basic movement with move()
+ * 	holds components
  * 
  * @author matthew
  * 
@@ -47,14 +47,15 @@ public abstract class Entity{
 
 	private Tile at;
 
-	public Entity(Tile t, StatComponent stat, DrawComponent d,
-		Updateable ups) {
+	public Entity(StatComponent stat, DrawComponent d, Updateable ups) {
+		this(null, stat, d, ups);
+	}
+
+	public Entity(Tile t, StatComponent stat, DrawComponent d, Updateable ups) {
 		setStat(stat);
-		at = t;
-		at.set_e_at(this);
+		move(t);
 		draw = d;
-		update = ups;
-		at.getLat().add_updateable(update);
+		setUpdate(ups);
 	}
 
 	public DrawComponent getDraw(){
@@ -69,9 +70,14 @@ public abstract class Entity{
 		return at.getLat();
 	}
 
-	public boolean move( Tile to ){
+	public boolean move(Tile to){
 		if(to == null){
 			return false;
+		}
+		if(at == null){
+			at = to;
+			at.set_e_at(this);
+			return true;
 		}
 		if(at.getLat().getDepth() != to.getLat().getDepth()){
 			at.getLat().remove_updateable(update);
@@ -92,21 +98,24 @@ public abstract class Entity{
 		return update;
 	}
 
-	public void setUpdate( Updateable update ){
-		at.getLat().remove_updateable(this.update);
+	public void setUpdate(Updateable update){
+		Updateable old = this.update;
 		this.update = update;
-		at.getLat().add_updateable(update);
+		if(at != null){
+			at.getLat().remove_updateable(this.update);
+			at.getLat().add_updateable(update);
+		}
 	}
 
 	public StatComponent getStat(){
 		return stat;
 	}
 
-	public void setStat( StatComponent stat ){
+	public void setStat(StatComponent stat){
 		this.stat = stat;
 	}
 
-	public boolean can_walk_to( Tile to ){
+	public boolean can_walk_to(Tile to){
 		if(!can_go_on(to)){
 			return false;
 		}
@@ -117,7 +126,7 @@ public abstract class Entity{
 		return true;
 	}
 
-	public boolean can_go_on( Tile to ){
+	public boolean can_go_on(Tile to){
 		if(to == null){
 			return false;
 		}

@@ -35,9 +35,9 @@ import entity.Updateable;
  * @author Matthew Gruda
  * 
  */
-public class GeneralMonster extends Entity{
+public class EMonster extends Entity{
 
-	public GeneralMonster(Tile t, StatComponent stat, DrawComponent d,
+	public EMonster(Tile t, StatComponent stat, DrawComponent d,
 		Updateable ups) {
 		super(t, stat, d, ups);
 	}
