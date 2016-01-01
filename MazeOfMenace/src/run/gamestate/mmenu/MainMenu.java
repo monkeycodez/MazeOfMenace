@@ -103,7 +103,7 @@ public class MainMenu implements GameControl{
 				int yads = i - halfopt;
 				Rectangle rect = new Rectangle(xloc, ycen + yads * height,
 					width, height);
-				lbls[i].set_box(rect);
+				lbls[i].set_bounds(rect);
 			}
 		}
 

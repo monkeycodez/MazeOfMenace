@@ -5,7 +5,7 @@ import window.MMWindow;
 
 public class Init{
 
-	public static void main( String args[] ){
+	public static void main(String args[]){
 		MMWindow w = setup();
 		CtrlStateManager mgr = new CtrlStateManager(null);
 		MainMenu m = new MainMenu(mgr);

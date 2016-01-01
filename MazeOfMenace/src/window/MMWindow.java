@@ -31,7 +31,7 @@ public class MMWindow{
 		}
 		inited = true;
 		try{
-			SwingUtilities.invokeAndWait(( ) -> _init());
+			SwingUtilities.invokeAndWait(()-> _init());
 			Thread.sleep(300);
 		}catch(InterruptedException | InvocationTargetException e){
 			e.printStackTrace();
@@ -40,14 +40,8 @@ public class MMWindow{
 		Dimension d = GraphicsEnvironment.getLocalGraphicsEnvironment()
 			.getMaximumWindowBounds().getSize();
 
-		disp = new BufferedImage(
-			d.width,
-			d.height,
-			BufferedImage.TYPE_INT_ARGB);
-		buf = new BufferedImage(
-			d.width,
-			d.height,
-			BufferedImage.TYPE_INT_ARGB);
+		disp = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
+		buf = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	private void _init(){
@@ -61,23 +55,23 @@ public class MMWindow{
 		win.addWindowListener(new WindowAdapter(){
 
 			@Override
-			public void windowClosing( WindowEvent e ){
+			public void windowClosing(WindowEvent e){
 				close = true;
 			}
 		});
 		win.addKeyListener(new KeyListener(){
 
 			@Override
-			public void keyTyped( KeyEvent e ){
+			public void keyTyped(KeyEvent e){
 
 			}
 
 			@Override
-			public void keyReleased( KeyEvent e ){
+			public void keyReleased(KeyEvent e){
 			}
 
 			@Override
-			public void keyPressed( KeyEvent e ){
+			public void keyPressed(KeyEvent e){
 				if(e.getKeyCode() == KeyEvent.VK_END){
 					close = true;
 				}
@@ -85,6 +79,13 @@ public class MMWindow{
 			}
 		});
 		win.add(panel, BorderLayout.CENTER);
+		try{
+			UIManager.setLookAndFeel(UIManager
+				.getCrossPlatformLookAndFeelClassName());
+		}catch(Exception e1){
+			e1.printStackTrace();
+			System.err.println("Cannot initalize look and feel");
+		}
 		panel.setMinimumSize(new Dimension(640, 480));
 		win.pack();
 		win.setVisible(true);
@@ -96,7 +97,7 @@ public class MMWindow{
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		protected void paintComponent( Graphics g ){
+		protected void paintComponent(Graphics g){
 			g.drawImage(disp, 0, 0, null);
 		}
 	}
@@ -126,6 +127,10 @@ public class MMWindow{
 
 	public boolean is_close_requested(){
 		return close;
+	}
+
+	public FontMetrics get_metrics(Font fnt){
+		return win.getFontMetrics(fnt);
 	}
 
 }
