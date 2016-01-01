@@ -5,19 +5,14 @@ import java.awt.event.KeyEvent;
 import run.CtrlStateManager;
 import run.gamestate.*;
 import run.gamestate.dgn.*;
+import run.gamestate.mmenu.LoadingScreen;
 import window.MMWindow;
 import window.widget.Label;
 import dungeon.Dungeon;
 
 public class MainMenu implements GameControl{
 
-	private String[] options = {"Start", "Exit"};
-
-	private CtrlStateManager mgr;
-
-	public MainMenu(CtrlStateManager mgr) {
-		this.mgr = mgr;
-	}
+	private static String[] options = {"Start", "Exit"};
 
 	class dpl{
 
@@ -28,9 +23,9 @@ public class MainMenu implements GameControl{
 		DrawControl dc = null;
 	}
 
-	private Runnable[] opt_act = new Runnable[]{()-> {
+	private static Runnable[] opt_act = new Runnable[]{()-> {
 
-		LoadingScreen.<dpl> do_loading_screen(mgr, ()-> {
+		LoadingScreen.<dpl> do_loading_screen(()-> {
 			Dungeon d = new Dungeon();
 			d.setUpDungeon();
 			dpl z = new dpl();
@@ -40,9 +35,9 @@ public class MainMenu implements GameControl{
 			return z;
 
 		}, (tpl)-> {
-			mgr.push_dc(tpl.dc);
-			mgr.push_ic(tpl.ic);
-			mgr.push_uc(tpl.uc);
+			CtrlStateManager.push_dc(tpl.dc);
+			CtrlStateManager.push_ic(tpl.ic);
+			CtrlStateManager.push_uc(tpl.uc);
 		});
 
 	}, ()-> {
@@ -52,21 +47,20 @@ public class MainMenu implements GameControl{
 	private Font ofont = new Font("Monospaced", Font.BOLD, 20);
 
 	private Label[] lbls = new Label[]{
-		new Label(options[0], ofont, null, Color.WHITE, new Color(0, 0, 0,
-			0)),
+			new Label(options[0], ofont, null, Color.WHITE, new Color(0, 0, 0,
+				0)),
 			new Label(options[1], ofont, null, Color.WHITE, new Color(0, 0, 0,
 				0))};
 
-	public MainMenu(CtrlStateManager mgr, String ops[], Runnable opa[]) {
-		this(mgr);
+	public MainMenu(MMWindow win) {
+		this(win, options, opt_act);
+	}
+
+	public MainMenu(MMWindow win, String ops[], Runnable opa[]) {
 		options = ops;
 		opt_act = opa;
 		assert (ops.length == opa.length);
-		lbls = new Label[opa.length];
-		for(int i = 0; i < ops.length; i++){
-			lbls[i] = new Label(options[i], ofont, null, Color.WHITE,
-				new Color(0, 0, 0, 0));
-		}
+
 	}
 
 	private int selected = 0;
@@ -132,13 +126,13 @@ public class MainMenu implements GameControl{
 		switch(k.getKeyCode()){
 			case KeyEvent.VK_UP:
 			selected = selected == 0 ? 0 : selected - 1;
-			break;
+				break;
 			case KeyEvent.VK_DOWN:
 			selected = selected == options.length - 1 ? selected : selected + 1;
-			break;
+				break;
 			case KeyEvent.VK_ENTER:
 			opt_act[selected].run();
-			break;
+				break;
 		}
 	}
 

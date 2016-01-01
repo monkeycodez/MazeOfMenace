@@ -7,10 +7,9 @@ public class Init{
 
 	public static void main(String args[]){
 		MMWindow w = setup();
-		CtrlStateManager mgr = new CtrlStateManager(null);
-		MainMenu m = new MainMenu(mgr);
-		mgr.push_all(m);
-		MLoop.run(w, mgr);
+		MainMenu m = new MainMenu(w);
+		CtrlStateManager.push_all(m);
+		MLoop.run(w);
 	}
 
 	private static MMWindow setup(){

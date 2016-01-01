@@ -10,21 +10,17 @@ import window.MMWindow;
 
 public class LoadingScreen<V> implements GameControl{
 
-	private CtrlStateManager mgr;
-
 	private Future<V> checker;
 
 	private Consumer<V> atend;
 
 	private Callable<V> td;
 
-	public LoadingScreen(CtrlStateManager mgr) {
-		this(mgr, null, null);
+	public LoadingScreen() {
+		this(null, null);
 	}
 
-	public LoadingScreen(CtrlStateManager mgr, Callable<V> todo,
-		Consumer<V> atexit) {
-		this.mgr = mgr;
+	public LoadingScreen(Callable<V> todo, Consumer<V> atexit) {
 		td = todo;
 		atend = atexit;
 
@@ -32,7 +28,7 @@ public class LoadingScreen<V> implements GameControl{
 
 	public void start(){
 		checker = Utils.bgthread.submit(td);
-		mgr.push_all(this);
+		CtrlStateManager.push_all(this);
 	}
 
 	@Override
@@ -42,9 +38,9 @@ public class LoadingScreen<V> implements GameControl{
 	@Override
 	public void update(long delay){
 		if(checker.isDone() || checker.isCancelled()){
-			mgr.pop_dc();
-			mgr.pop_ic();
-			mgr.pop_uc();
+			CtrlStateManager.pop_dc();
+			CtrlStateManager.pop_ic();
+			CtrlStateManager.pop_uc();
 			try{
 				atend.accept(checker.get());
 			}catch(InterruptedException e){
@@ -77,11 +73,9 @@ public class LoadingScreen<V> implements GameControl{
 		dirty = true;
 	}
 
-	public static <V> void do_loading_screen(
-		CtrlStateManager mgr,
-		Callable<V> todo,
-		Consumer<V> atexit){
-		LoadingScreen<V> l = new LoadingScreen<>(mgr, todo, atexit);
+	public static <V> void
+		do_loading_screen(Callable<V> todo,Consumer<V> atexit){
+		LoadingScreen<V> l = new LoadingScreen<>(todo, atexit);
 		l.start();
 	}
 

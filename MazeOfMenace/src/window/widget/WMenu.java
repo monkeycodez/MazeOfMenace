@@ -22,7 +22,10 @@ public class WMenu extends WComp{
 
 	@Override
 	public void drawComp(Graphics2D gd){
-
+		for(Label l : lbls){
+			l.set_bg(Color.BLACK);
+		}
+		lbls[selected].set_bg(Color.BLUE);
 	}
 
 	public void select(int num){

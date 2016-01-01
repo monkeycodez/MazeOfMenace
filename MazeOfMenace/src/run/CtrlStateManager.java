@@ -1,55 +1,54 @@
 package run;
 
 import java.util.LinkedList;
-import run.gamestate.DrawControl;
-import run.gamestate.GameControl;
-import run.gamestate.InputControl;
-import run.gamestate.UpdateControl;
+import run.gamestate.*;
 
 public class CtrlStateManager{
 
-	private LinkedList<DrawControl> dl = new LinkedList<>();
+	private static LinkedList<DrawControl> dl = new LinkedList<>();
 
-	private LinkedList<UpdateControl> uc = new LinkedList<>();
+	private static LinkedList<UpdateControl> uc = new LinkedList<>();
 
-	private LinkedList<InputControl> ic = new LinkedList<>();
+	private static LinkedList<InputControl> ic = new LinkedList<>();
 
-	public CtrlStateManager(InputControl inc, UpdateControl upc,
-		DrawControl drc) {
+	public static void init_mgr(
+		InputControl inc,
+		UpdateControl upc,
+		DrawControl drc){
 		ic.push(inc);
 		uc.push(upc);
 		dl.push(drc);
 	}
 
-	public CtrlStateManager(GameControl ctrl) {
+	public static void init_mgr(GameControl ctrl){
 		push_all(ctrl);
 	}
 
-	public InputControl get_ic(){
+	public static InputControl get_ic(){
 		return ic.getFirst();
 	}
 
-	public UpdateControl get_uc(){
+	public static UpdateControl get_uc(){
 		return uc.getFirst();
 	}
 
-	public DrawControl get_dc(){
+	public static DrawControl get_dc(){
 		return dl.getFirst();
 	}
 
-	public void push_ic( InputControl ict ){
+	public static void push_ic(InputControl ict){
 		ic.push(ict);
 	}
 
-	public void push_uc( UpdateControl ict ){
+	public static void push_uc(UpdateControl ict){
 		uc.push(ict);
 	}
 
-	public void push_dc( DrawControl ict ){
+	public static void push_dc(DrawControl ict){
 		dl.push(ict);
 	}
 
-	public void push_all( GameControl gc ){
+	public static void push_all(GameControl gc){
 		if(gc == null){
 			return;
 		}
@@ -58,19 +57,19 @@ public class CtrlStateManager{
 		push_uc(gc);
 	}
 
-	public void pop_ic(){
+	public static void pop_ic(){
 		ic.pop();
 	}
 
-	public void pop_uc(){
+	public static void pop_uc(){
 		uc.pop();
 	}
 
-	public void pop_dc(){
+	public static void pop_dc(){
 		dl.pop();
 	}
 
-	public void flush_all(){
+	public static void flush_all(){
 		dl.clear();
 		uc.clear();
 		ic.clear();
